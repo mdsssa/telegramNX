@@ -18,8 +18,9 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
 - Загрузка списка чатов, истории сообщений и отправка текста
   (`messages.getDialogs`, `messages.getHistory`, `messages.sendMessage`).
 - UI: два-панельный список чатов, пузыри сообщений, экран входа с QR, настройки.
-- Сборка под macOS (скриншоты/тесты) и **готовый `.nro`** (devkitA64 r29 +
-  libnx 4.12, GCC 15.2): `dist/telegramnx.nro` (1.1 МБ) + шрифты в `dist/fonts`.
+- Сборка под macOS (скриншоты/тесты) и **готовый `.nro`** (devkitA64 r29.1,
+  GCC 15.2, newlib 4.6 + libnx 4.12): `dist/telegramnx.nro` (1.1 МБ) +
+  шрифты в `dist/fonts`.
 
 ## Ограничения
 
@@ -45,8 +46,9 @@ dist/fonts/NotoSans-Regular.ttf
 dist/fonts/NotoSans-SemiBold.ttf
 ```
 
-SHA-256: `ae4d6d9ab767466d4a6119ab66ff2035d1a72fd503082c8a832bd99b5617352c`
+SHA-256: `5d724e027fa0edb14a247ff2abf29b62e0ed93b93926e8c01bab83cc1ff3954a`
 (см. `dist/README.txt`). Архив для SD: `telegramNX-nro.zip`.
+В нём также `hello.nro` — минимальный тест libnx/консоли для диагностики.
 
 ## Сборка для Switch
 
@@ -63,8 +65,10 @@ SHA-256: `ae4d6d9ab767466d4a6119ab66ff2035d1a72fd503082c8a832bd99b5617352c`
    ```sh
    make
    ```
-   Результат: `build_switch/telegramnx.nro` (проверено на devkitA64 r29,
-   GCC 15.2.0, libnx 4.12.0; сборка чистая, без предупреждений).
+   Результат: `build_switch/telegramnx.nro` (проверено на devkitA64 r29.1,
+   GCC 15.2.0, newlib 4.6 + libnx 4.12.0; сборка чистая).
+   Важно: newlib 4.5 + libnx 4.12 несовместимы — падение в `fsdev_chdir`
+   до `main` на прошивке 22.x.
    Готовый workflow для GitHub Actions лежит в
    `.github/workflows/build-switch.yml` (собирает `.nro` в контейнере
    devkitPro).

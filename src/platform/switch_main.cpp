@@ -20,6 +20,10 @@ using namespace tgnx;
 
 namespace {
 
+void bootLog(const std::string& stage) {
+    platform::writeFile(platform::configDir() + "/boot.log", stage + "\n");
+}
+
 ClientConfig g_config;
 TelegramClient g_client;
 ui::App g_app;
@@ -179,6 +183,7 @@ void handleClientEvents() {
 }  // namespace
 
 int main(int argc, char** argv) {
+    bootLog("main entered");
     platform::initNetwork();
     hidInitializeTouchScreen();
 
@@ -200,6 +205,7 @@ int main(int argc, char** argv) {
                             "romfs:/fonts/NotoSans-Regular.ttf"},
                            18) &&
              fontsOk;
+    bootLog(fontsOk ? "fonts ok" : "fonts missing");
     if (!fontsOk) {
         consoleInit(nullptr);
         std::printf("TelegramNX: fonts not found.\nCopy NotoSans-Regular.ttf and "
@@ -212,12 +218,15 @@ int main(int argc, char** argv) {
     Framebuffer fb;
     if (R_FAILED(framebufferCreate(&fb, win, 1280, 720, PIXEL_FORMAT_BGRA_8888, 2)) ||
         R_FAILED(framebufferMakeLinear(&fb))) {
+        bootLog("framebuffer failed");
         return 1;
     }
+    bootLog("framebuffer ok");
 
     g_app.init(&fonts);
 
     g_config = loadConfig();
+    bootLog("config api_id=" + std::to_string(g_config.apiId));
     if (g_config.apiId == 0) {
         g_app.setScreen(ui::Screen::Setup);
     } else {
@@ -284,6 +293,11 @@ int main(int argc, char** argv) {
             in.touchY = int(touch.touches[0].y);
         }
 
+        static bool loopLogged = false;
+        if (!loopLogged) {
+            bootLog("render loop");
+            loopLogged = true;
+        }
         handleClientEvents();
         g_app.update(in);
         g_app.render(canvas);
