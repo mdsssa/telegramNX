@@ -11,6 +11,7 @@ OFILES      := $(patsubst %.cpp,$(BUILD)/%.o,$(SOURCES))
 APP_TITLE   := TelegramNX
 APP_AUTHOR  := homebrew
 APP_VERSION := 0.1.0
+ICON        := assets/icon.jpg
 
 ifeq ($(strip $(DEVKITPRO)),)
 $(error "DEVKITPRO is not set. Install devkitPro and export DEVKITPRO=/opt/devkitpro")
@@ -46,7 +47,7 @@ $(BUILD)/$(TARGET).nacp:
 	$(NACPTOOL) --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $@
 
 $(BUILD)/$(TARGET).nro: $(BUILD)/$(TARGET).elf $(BUILD)/$(TARGET).nacp
-	$(ELF2NRO) $< $@ --nacp=$(BUILD)/$(TARGET).nacp
+	$(ELF2NRO) $< $@ --nacp=$(BUILD)/$(TARGET).nacp --icon=$(ICON)
 
 $(BUILD)/$(TARGET).elf: $(OFILES)
 	@mkdir -p $(BUILD)

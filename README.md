@@ -22,9 +22,9 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
 
 ## Ограничения
 
-- В UI вход только по QR-коду. Телефонный вход (`auth.sendCode` /
-  `auth.signIn` / `auth.signUp`) реализован в API и проверяется CLI
-  `live_phone`, но пока не выведен на экран Switch.
+- Вход по номеру/SMS-коду выведен в UI (кнопка «Войти по номеру телефона»),
+  включая `auth.signUp` для нового аккаунта и 2FA после кода; live-проверка
+  требует своего `api_id`.
 - Нет медиа (фото/видео/стикеры), редактирования, реакций и push-обновлений:
   список и история обновляются по запросу.
 - Нужны собственные `api_id`/`api_hash` с https://my.telegram.org — встраивать
@@ -72,7 +72,7 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
 ```sh
 cmake -S . -B build
 cmake --build build -j8
-ctest --test-dir build --output-on-failure   # крипто-тесты
+ctest --test-dir build --output-on-failure   # крипто/парсер-тесты + switch_syntax
 ./build/live_auth                             # живое DH + ping к DC2
 ./build/live_config                           # RPC + gzip (help.getConfig)
 ./build/ui_shots                              # скриншоты экранов

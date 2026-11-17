@@ -52,6 +52,14 @@ target_link_libraries(parse_test PRIVATE tgnx_core)
 target_compile_options(parse_test PRIVATE ${TGNX_WARNINGS})
 add_test(NAME parse COMMAND parse_test)
 
+add_test(NAME switch_syntax
+    COMMAND ${CMAKE_CXX_COMPILER} -std=c++17 -fsyntax-only
+            -I${CMAKE_CURRENT_SOURCE_DIR}/src
+            -I${CMAKE_CURRENT_SOURCE_DIR}/third_party
+            -I${CMAKE_CURRENT_SOURCE_DIR}/tests/switch_stub
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/switch_main.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/switch_platform.cpp)
+
 add_library(tgnx_ui STATIC
     src/ui/canvas.cpp
     src/ui/font.cpp

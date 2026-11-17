@@ -141,6 +141,18 @@ void handleClientEvents() {
                 g_app.setStatus("");
                 g_client.requestHistory(g_currentPeer, 40);
                 break;
+            case ClientEvent::Type::PhoneCode: {
+                g_app.setStatus("Введите код из Telegram");
+                std::string phone = ev.text;
+                std::string code = keyboardInput("Код из Telegram", "", 16);
+                if (!code.empty()) {
+                    g_client.submitLoginCode(code);
+                    g_app.setStatus("Проверка кода…");
+                } else {
+                    g_app.setStatus("Код не введён", true);
+                }
+                break;
+            }
             case ClientEvent::Type::Error:
                 g_app.setStatus(ev.text, true);
                 break;
@@ -232,6 +244,12 @@ int main(int argc, char** argv) {
         if (!text.empty()) g_app.setComposerText(g_app.composerText() + text);
     };
     g_app.onSetup = []() { setupAccount(); };
+    g_app.onPhoneLogin = []() {
+        std::string phone = keyboardInput("Номер телефона (например +79991234567)", "", 24);
+        if (phone.empty()) return;
+        g_app.setStatus("Запрос кода…");
+        g_client.loginWithPhone(phone);
+    };
     g_app.onRefreshQr = []() {};
     g_app.onLogout = []() {
         g_client.stop();

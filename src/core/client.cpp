@@ -128,6 +128,16 @@ void TelegramClient::submitPassword(std::string password) {
     commands_.push_back({Command::Type::Password, 0, {}, std::move(password)});
 }
 
+void TelegramClient::loginWithPhone(std::string phone) {
+    platform::Lock lock(mutex_);
+    commands_.push_back({Command::Type::PhoneLogin, 0, {}, std::move(phone)});
+}
+
+void TelegramClient::submitLoginCode(std::string code) {
+    platform::Lock lock(mutex_);
+    commands_.push_back({Command::Type::Code, 0, {}, std::move(code)});
+}
+
 bool TelegramClient::popCommand(Command* cmd, int waitMs) {
     for (int waited = 0; waited < waitMs && running_; waited += 5) {
         {
@@ -226,14 +236,53 @@ void TelegramClient::run(ClientConfig config) {
             return false;
         };
 
+        auto handlePhoneLogin = [&](const std::string& phone) {
+            api::LoginCodeRequest req =
+                api::requestLoginCode(*rpc, config.apiId, config.apiHash, phone);
+            if (!req.ok) {
+                push({ClientEvent::Type::Error, "Код: " + req.error});
+                return false;
+            }
+            push({ClientEvent::Type::PhoneCode, phone});
+            while (running_) {
+                Command cmd;
+                if (!popCommand(&cmd, 250)) continue;
+                if (cmd.type != Command::Type::Code) continue;
+                api::LoginToken t = api::signInWithCode(*rpc, phone, req.codeHash, cmd.text);
+                if (t.kind != api::LoginToken::Kind::Success &&
+                    t.errorText.find("UNOCCUPIED") != std::string::npos) {
+                    t = api::signUpWithCode(*rpc, phone, req.codeHash, "Switch", "User");
+                }
+                if (t.kind == api::LoginToken::Kind::Success) {
+                    persistLogin(key, t.userName);
+                    return true;
+                }
+                if (t.errorText.find("PASSWORD") != std::string::npos &&
+                    handlePassword(*rpc, key)) {
+                    return true;
+                }
+                push({ClientEvent::Type::Error, "Код: " + t.errorText});
+                push({ClientEvent::Type::PhoneCode, phone});
+            }
+            return false;
+        };
+
         bool done = false;
+        uint64_t lastQr = 0;
         while (running_ && !done) {
+            Command loginCmd;
+            if (popCommand(&loginCmd, 200)) {
+                if (loginCmd.type == Command::Type::PhoneLogin) {
+                    if (handlePhoneLogin(loginCmd.text)) done = true;
+                    continue;
+                }
+            }
+            uint64_t now = platform::monotonicMs();
+            if (now - lastQr < 2000) continue;
+            lastQr = now;
             api::LoginToken token = api::exportLoginToken(*rpc, config.apiId, config.apiHash);
             if (token.kind == api::LoginToken::Kind::Token) {
                 push({ClientEvent::Type::Qr, api::qrLoginUrl(token.token)});
-                for (int i = 0; i < 20 && running_; ++i) {
-                    platform::sleepMs(100);
-                }
                 continue;
             }
             if (token.kind == api::LoginToken::Kind::Success) {

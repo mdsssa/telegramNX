@@ -68,6 +68,7 @@ public:
     std::function<void()> onRefreshQr;
     std::function<void()> onLogout;
     std::function<void()> onSetup;
+    std::function<void()> onPhoneLogin;
 
     const std::string& composerText() const { return composer_; }
     void setComposerText(std::string text) { composer_ = std::move(text); }

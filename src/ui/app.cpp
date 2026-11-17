@@ -240,9 +240,14 @@ void App::update(const Input& input) {
             }
         }
     } else if (screen_ == Screen::Login) {
-        if (input.touch && input.touchY > 520 && input.touchY < 580 && input.touchX > 490 &&
+        if (input.touch && input.touchY > 540 && input.touchY < 596 && input.touchX > 490 &&
             input.touchX < 790) {
             if (onRefreshQr) onRefreshQr();
+        }
+        if (input.x && onPhoneLogin) onPhoneLogin();
+        if (input.touch && input.touchY > 600 && input.touchY < 656 && input.touchX > 490 &&
+            input.touchX < 790) {
+            if (onPhoneLogin) onPhoneLogin();
         }
         if (input.b) screen_ = Screen::Settings;
     } else if (screen_ == Screen::Settings) {
@@ -465,9 +470,12 @@ void App::renderLoginScreen(Canvas& c) {
                  "Настройки > Устройства > Подключить устройство", kMuted);
     drawCentered(c, fonts_->regular, {card.x, card.y + 452, card.w, 28}, loginStatus_,
                  statusError_ ? rgb(240, 120, 120) : kText);
-    Rect refresh{card.x + card.w / 2 - 150, card.y + 500, 300, 48};
+    Rect refresh{card.x + card.w / 2 - 150, card.y + 488, 300, 48};
     c.fillRoundRect(refresh, 24, kPanelAlt);
     drawCentered(c, fonts_->regular, refresh, "Обновить QR-код", kText);
+    Rect phone{card.x + card.w / 2 - 150, card.y + 548, 300, 48};
+    c.fillRoundRect(phone, 24, withAlpha(kAccent, 90));
+    drawCentered(c, fonts_->regular, phone, "Войти по номеру телефона", kText);
 }
 
 void App::renderSettingsScreen(Canvas& c) {
