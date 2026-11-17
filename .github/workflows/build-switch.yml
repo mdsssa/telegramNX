@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install zlib for Switch
-        run: dkp-pacman -S --noconfirm --needed switch-zlib
+        run: dkp-pacman -S --noconfirm --needed switch-dev switch-zlib
       - name: Build NRO
         run: make -j"$(nproc)"
       - name: Upload artifact
