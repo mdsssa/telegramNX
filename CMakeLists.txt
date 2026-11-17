@@ -70,6 +70,26 @@ target_include_directories(tgnx_ui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAK
 target_link_libraries(tgnx_ui PUBLIC tgnx_core)
 target_compile_options(tgnx_ui PRIVATE ${TGNX_WARNINGS})
 
+option(TGNX_BUILD_HOST_UI "Build the SDL2 macOS host UI" ON)
+if(TGNX_BUILD_HOST_UI)
+    find_library(SDL2_LIBRARY SDL2 HINTS /opt/homebrew/lib /usr/local/lib)
+    find_path(SDL2_INCLUDE_DIR SDL.h HINTS /opt/homebrew/include/SDL2 /usr/local/include/SDL2)
+    if(SDL2_LIBRARY AND SDL2_INCLUDE_DIR)
+        add_executable(telegramnx_host src/platform/host_main.cpp)
+        target_link_libraries(telegramnx_host PRIVATE tgnx_ui)
+        target_include_directories(telegramnx_host PRIVATE ${SDL2_INCLUDE_DIR})
+        target_link_libraries(telegramnx_host PRIVATE ${SDL2_LIBRARY})
+        if(APPLE)
+            target_link_libraries(telegramnx_host PRIVATE
+                "-framework Cocoa" "-framework IOKit" "-framework CoreVideo"
+                "-framework AudioToolbox" "-framework GameController")
+        endif()
+        target_compile_options(telegramnx_host PRIVATE ${TGNX_WARNINGS})
+    else()
+        message(STATUS "SDL2 not found; skipping telegramnx_host (install: brew install sdl2)")
+    endif()
+endif()
+
 add_executable(ui_shots tests/ui_shots.cpp)
 target_link_libraries(ui_shots PRIVATE tgnx_ui)
 target_compile_options(ui_shots PRIVATE ${TGNX_WARNINGS})
