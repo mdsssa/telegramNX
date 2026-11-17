@@ -52,12 +52,6 @@ int64_t computeFingerprint(const Bytes& n, const Bytes& e) {
     return int64_t(loadLe64(digest.data() + 12));
 }
 
-Bytes xorBytes(const Bytes& a, const uint8_t* b) {
-    Bytes out(a.size());
-    for (size_t i = 0; i < a.size(); ++i) out[i] = a[i] ^ b[i];
-    return out;
-}
-
 }  // namespace
 
 RsaKey RsaKey::fromPem(const std::string& pem) {

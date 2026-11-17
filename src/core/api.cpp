@@ -325,6 +325,9 @@ void writePeer(TlWriter& w, const PeerRef& peer) {
             w.i64(peer.id);
             w.i64(int64_t(peer.accessHash));
             break;
+        case PeerRef::Kind::Self:
+            w.u32(0x7da07ec9);  // inputPeerSelf
+            break;
     }
 }
 

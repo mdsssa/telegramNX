@@ -18,7 +18,8 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
 - Загрузка списка чатов, истории сообщений и отправка текста
   (`messages.getDialogs`, `messages.getHistory`, `messages.sendMessage`).
 - UI: два-панельный список чатов, пузыри сообщений, экран входа с QR, настройки.
-- Сборка под macOS (скриншоты/тесты) и Makefile под Switch (devkitPro + libnx).
+- Сборка под macOS (скриншоты/тесты) и **готовый `.nro`** (devkitA64 r29 +
+  libnx 4.12, GCC 15.2): `dist/telegramnx.nro` (1.1 МБ) + шрифты в `dist/fonts`.
 
 ## Ограничения
 
@@ -29,10 +30,23 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
   список и история обновляются по запросу.
 - Нужны собственные `api_id`/`api_hash` с https://my.telegram.org — встраивать
   чужие нельзя.
-- `.nro` в этой среде не собран: devkitPro для macOS требует Rosetta/установки
-  пакетов, которых здесь нет. Хост-сборка и сетевые тесты проверены; Switch-
-  Makefile и платформенный код написаны, но требуют проверки на машине с
-  devkitPro.
+- `.nro` собран и слинкован, но на реальной консоли не запускался (устройства
+  нет). Перед раздачей прогоните его на CFW-Switch.
+- Живой вход (QR/номер), список чатов и отправка не проверены без вашего
+  `api_id`/`api_hash`; запросы/парсеры покрыты тестами, но нужен end-to-end прогон.
+
+## Готовый `.nro`
+
+В `dist/` лежит собранный комплект:
+
+```
+dist/telegramnx.nro
+dist/fonts/NotoSans-Regular.ttf
+dist/fonts/NotoSans-SemiBold.ttf
+```
+
+SHA-256: `ae4d6d9ab767466d4a6119ab66ff2035d1a72fd503082c8a832bd99b5617352c`
+(см. `dist/README.txt`). Архив для SD: `telegramNX-nro.zip`.
 
 ## Сборка для Switch
 
@@ -49,7 +63,8 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
    ```sh
    make
    ```
-   Результат: `build_switch/telegramnx.nro`.
+   Результат: `build_switch/telegramnx.nro` (проверено на devkitA64 r29,
+   GCC 15.2.0, libnx 4.12.0; сборка чистая, без предупреждений).
    Готовый workflow для GitHub Actions лежит в
    `.github/workflows/build-switch.yml` (собирает `.nro` в контейнере
    devkitPro).

@@ -379,7 +379,7 @@ bool ping(Transport& transport, const AuthKey& authKey, int timeoutMs, std::stri
     if (!transport.send(pingPacket, 10000, error)) return false;
 
     int64_t deadline = int64_t(platform::monotonicMs()) + timeoutMs;
-    while (platform::monotonicMs() < deadline) {
+    while (int64_t(platform::monotonicMs()) < deadline) {
         Bytes packet;
         if (!transport.receive(&packet, 10000, error)) return false;
         UnencryptedPacket msg;
