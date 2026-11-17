@@ -1,0 +1,11 @@
+build*/
+.cache/
+*.o
+*.nro
+*.elf
+*.nacp
+*.nso
+*.a
+.DS_Store
+build_switch/
+.cache/
