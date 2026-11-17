@@ -1023,6 +1023,9 @@ static const FieldDef kFields_53f3ce5a[] = {
 static const FieldDef kFields_541a1d1a[] = {
     {"by_me", nullptr, FieldType::True, 0, 0},
 };
+static const FieldDef kFields_548a30f5[] = {
+    {nullptr, nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_54b56617[] = {
     {"documents", "Document", FieldType::Vector, 0, 0},
     {"settings", "ThemeSettings", FieldType::Boxed, 0, 1},
@@ -1955,6 +1958,21 @@ static const FieldDef kFields_94a495c3[] = {
 };
 static const FieldDef kFields_94bd38ed[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
+};
+static const FieldDef kFields_957b50fb[] = {
+    {"has_recovery", nullptr, FieldType::True, 0, 0},
+    {"has_secure_values", nullptr, FieldType::True, 0, 1},
+    {"has_password", nullptr, FieldType::True, 0, 2},
+    {"current_algo", "PasswordKdfAlgo", FieldType::Boxed, 0, 2},
+    {"srp_B", nullptr, FieldType::Bytes, 0, 2},
+    {"srp_id", nullptr, FieldType::Long, 0, 2},
+    {"hint", nullptr, FieldType::String, 0, 3},
+    {"email_unconfirmed_pattern", nullptr, FieldType::String, 0, 4},
+    {"new_algo", "PasswordKdfAlgo", FieldType::Boxed, -1, 0},
+    {"new_secure_algo", "SecurePasswordKdfAlgo", FieldType::Boxed, -1, 0},
+    {"secure_random", nullptr, FieldType::Bytes, -1, 0},
+    {"pending_reset_date", nullptr, FieldType::Int, 0, 5},
+    {"login_email_pattern", nullptr, FieldType::String, 0, 6},
 };
 static const FieldDef kFields_95ac5ce4[] = {
     {"token", nullptr, FieldType::Bytes, -1, 0},
@@ -3668,6 +3686,7 @@ const CtorDef kCtors[] = {
     {0x5367e5beu, "inputSecureFile", kFields_5367e5be, (uint16_t)(sizeof(kFields_5367e5be) / sizeof(FieldDef)), 0, 0},
     {0x53f3ce5au, "inputInlineButtonTypeUserProfile", kFields_53f3ce5a, (uint16_t)(sizeof(kFields_53f3ce5a) / sizeof(FieldDef)), 0, 0},
     {0x541a1d1au, "userStatusLastWeek", kFields_541a1d1a, (uint16_t)(sizeof(kFields_541a1d1a) / sizeof(FieldDef)), 1, 0},
+    {0x548a30f5u, "account.getPassword", kFields_548a30f5, (uint16_t)(sizeof(kFields_548a30f5) / sizeof(FieldDef)), 0, 0},
     {0x54b56617u, "webPageAttributeTheme", kFields_54b56617, (uint16_t)(sizeof(kFields_54b56617) / sizeof(FieldDef)), 1, 0},
     {0x55451fa9u, "phone.getCallConfig", kFields_55451fa9, (uint16_t)(sizeof(kFields_55451fa9) / sizeof(FieldDef)), 0, 0},
     {0x55fb0996u, "messages.getPersonalChannelHistory", kFields_55fb0996, (uint16_t)(sizeof(kFields_55fb0996) / sizeof(FieldDef)), 0, 0},
@@ -3828,6 +3847,7 @@ const CtorDef kCtors[] = {
     {0x93b31848u, "messageActionRequestedPeerSentMe", kFields_93b31848, (uint16_t)(sizeof(kFields_93b31848) / sizeof(FieldDef)), 0, 0},
     {0x94a495c3u, "messages.getQuickReplyMessages", kFields_94a495c3, (uint16_t)(sizeof(kFields_94a495c3) / sizeof(FieldDef)), 1, 0},
     {0x94bd38edu, "messageActionPinMessage", kFields_94bd38ed, (uint16_t)(sizeof(kFields_94bd38ed) / sizeof(FieldDef)), 0, 0},
+    {0x957b50fbu, "account.password", kFields_957b50fb, (uint16_t)(sizeof(kFields_957b50fb) / sizeof(FieldDef)), 1, 0},
     {0x95ac5ce4u, "auth.importLoginToken", kFields_95ac5ce4, (uint16_t)(sizeof(kFields_95ac5ce4) / sizeof(FieldDef)), 0, 0},
     {0x95d2ac92u, "messageActionChannelCreate", kFields_95d2ac92, (uint16_t)(sizeof(kFields_95d2ac92) / sizeof(FieldDef)), 0, 0},
     {0x95ddcf69u, "messageActionSuggestedPostSuccess", kFields_95ddcf69, (uint16_t)(sizeof(kFields_95ddcf69) / sizeof(FieldDef)), 0, 0},

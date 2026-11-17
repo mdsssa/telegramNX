@@ -256,6 +256,20 @@ BigInt modPow(const BigInt& base, const BigInt& exponent, const BigInt& modulus)
     return ctx.fromMont(result);
 }
 
+BigInt modMultiply(const BigInt& a, const BigInt& b, const BigInt& modulus) {
+    if (modulus.isZero() || modulus.isEven()) throw ProtocolError("modMultiply: bad modulus");
+    MontCtx ctx(modulus);
+    BigInt x = a;
+    BigInt y = b;
+    while (x.compare(modulus) >= 0) x.subtract(modulus);
+    while (y.compare(modulus) >= 0) y.subtract(modulus);
+    BigInt xm = ctx.toMont(x);
+    BigInt ym = ctx.toMont(y);
+    BigInt r;
+    ctx.mul(xm, ym, r);
+    return ctx.fromMont(r);
+}
+
 BigInt randomBigInt2048() {
     Bytes b(256);
     platform::secureRandom(b.data(), b.size());

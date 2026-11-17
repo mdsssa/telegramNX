@@ -46,13 +46,15 @@ bool loadFontFrom(ui::Font& font, std::initializer_list<const char*> paths, floa
     return false;
 }
 
-std::string keyboardInput(const char* guide, const std::string& initial, int maxLen = 512) {
+std::string keyboardInput(const char* guide, const std::string& initial, int maxLen = 512,
+                          bool password = false) {
     SwkbdConfig kbd;
     if (R_FAILED(swkbdCreate(&kbd, 0))) return {};
     swkbdConfigMakePresetDefault(&kbd);
     swkbdConfigSetGuideText(&kbd, guide);
     if (!initial.empty()) swkbdConfigSetInitialText(&kbd, initial.c_str());
     swkbdConfigSetStringLenMax(&kbd, u32(maxLen));
+    if (password) swkbdConfigSetPasswordFlag(&kbd, 1);
     std::vector<char> buf(maxLen + 1, 0);
     Result rc = swkbdShow(&kbd, buf.data(), buf.size());
     swkbdClose(&kbd);
@@ -142,9 +144,19 @@ void handleClientEvents() {
             case ClientEvent::Type::Error:
                 g_app.setStatus(ev.text, true);
                 break;
-            case ClientEvent::Type::NeedPassword:
-                g_app.setStatus("Включена двухфакторная защита: вход по паролю пока не поддержан", true);
+            case ClientEvent::Type::NeedPassword: {
+                std::string guide = ev.text.empty() ? "Пароль облачной защиты" : ev.text;
+                std::string pwd = keyboardInput(guide.c_str(), "", 256, true);
+                if (!pwd.empty()) {
+                    g_client.submitPassword(pwd);
+                    g_app.setStatus("Проверка пароля…");
+                } else {
+                    g_app.setStatus("Пароль не введён — перезапуск входа", true);
+                    g_client.stop();
+                    g_client.start(g_config);
+                }
                 break;
+            }
             case ClientEvent::Type::Info:
                 g_app.setStatus(ev.text);
                 break;

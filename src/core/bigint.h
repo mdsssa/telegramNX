@@ -37,6 +37,7 @@ public:
 
 // base^exponent mod modulus. Modulus must be odd and non-zero.
 BigInt modPow(const BigInt& base, const BigInt& exponent, const BigInt& modulus);
+BigInt modMultiply(const BigInt& a, const BigInt& b, const BigInt& modulus);
 
 // Random 2048-bit value with the top bit cleared (so < 2^2047) and the next
 // bit set, well above 1.

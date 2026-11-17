@@ -123,6 +123,11 @@ void TelegramClient::sendText(api::PeerRef peer, std::string text) {
     commands_.push_back({Command::Type::Send, 0, peer, std::move(text)});
 }
 
+void TelegramClient::submitPassword(std::string password) {
+    platform::Lock lock(mutex_);
+    commands_.push_back({Command::Type::Password, 0, {}, std::move(password)});
+}
+
 bool TelegramClient::popCommand(Command* cmd, int waitMs) {
     for (int waited = 0; waited < waitMs && running_; waited += 5) {
         {
@@ -185,7 +190,42 @@ void TelegramClient::run(ClientConfig config) {
     }
 
     if (!loggedIn) {
-        // QR login loop.
+        auto persistLogin = [&](const mt::AuthKey& k, const std::string& name) {
+            config.userName = name;
+            config.authKeyHex = hex(k.key);
+            config.salt = k.salt;
+            config.timeOffsetSec = k.timeOffsetSec;
+            saveConfig(config);
+            {
+                platform::Lock lock(mutex_);
+                config_ = config;
+            }
+            push({ClientEvent::Type::LoginOk, name});
+        };
+
+        auto handlePassword = [&](mt::RpcClient& client, const mt::AuthKey& k) {
+            std::string perr;
+            SrpParams params;
+            if (!api::fetchPasswordParams(client, &params, &perr)) {
+                push({ClientEvent::Type::Error, "Пароль: " + perr});
+                return false;
+            }
+            push({ClientEvent::Type::NeedPassword, params.hint});
+            while (running_) {
+                Command cmd;
+                if (!popCommand(&cmd, 250)) continue;
+                if (cmd.type != Command::Type::Password) continue;
+                api::LoginToken lt = api::checkPassword(client, params, cmd.text);
+                if (lt.kind == api::LoginToken::Kind::Success) {
+                    persistLogin(k, lt.userName);
+                    return true;
+                }
+                push({ClientEvent::Type::Error, "Пароль: " + lt.errorText});
+                push({ClientEvent::Type::NeedPassword, params.hint});
+            }
+            return false;
+        };
+
         bool done = false;
         while (running_ && !done) {
             api::LoginToken token = api::exportLoginToken(*rpc, config.apiId, config.apiHash);
@@ -197,16 +237,7 @@ void TelegramClient::run(ClientConfig config) {
                 continue;
             }
             if (token.kind == api::LoginToken::Kind::Success) {
-                config.userName = token.userName;
-                config.authKeyHex = hex(key.key);
-                config.salt = key.salt;
-                config.timeOffsetSec = key.timeOffsetSec;
-                saveConfig(config);
-                {
-                    platform::Lock lock(mutex_);
-                    config_ = config;
-                }
-                push({ClientEvent::Type::LoginOk, token.userName});
+                persistLogin(key, token.userName);
                 done = true;
                 break;
             }
@@ -228,25 +259,21 @@ void TelegramClient::run(ClientConfig config) {
                 rpc = std::make_unique<mt::RpcClient>(*transport, newKey);
                 rpc->setApiCredentials(config.apiId, config.apiHash);
                 rpc->setClientInfo("Nintendo Switch", "Horizon", "0.1.0");
+                config.dcId = token.dcId;
+                config.dcIp = ip;
                 api::LoginToken imported = api::importLoginToken(*rpc, token.token);
                 if (imported.kind == api::LoginToken::Kind::Success) {
-                    config.userName = imported.userName;
-                    config.authKeyHex = hex(newKey.key);
-                    config.salt = newKey.salt;
-                    config.timeOffsetSec = newKey.timeOffsetSec;
-                    config.dcId = token.dcId;
-                    config.dcIp = ip;
-                    saveConfig(config);
-                    push({ClientEvent::Type::LoginOk, imported.userName});
+                    persistLogin(newKey, imported.userName);
                     done = true;
+                } else if (imported.errorText.find("PASSWORD") != std::string::npos) {
+                    if (handlePassword(*rpc, newKey)) done = true;
                 } else {
-                    push({ClientEvent::Type::Error,
-                          "Импорт токена: " + imported.errorText});
+                    push({ClientEvent::Type::Error, "Импорт токена: " + imported.errorText});
                 }
                 continue;
             }
             if (token.errorText.find("PASSWORD") != std::string::npos) {
-                push({ClientEvent::Type::NeedPassword, token.errorText});
+                if (handlePassword(*rpc, key)) done = true;
                 break;
             }
             push({ClientEvent::Type::Error,

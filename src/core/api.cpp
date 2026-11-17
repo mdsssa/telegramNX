@@ -154,6 +154,74 @@ LoginToken importLoginToken(mt::RpcClient& rpc, const Bytes& tokenBytes) {
 
 std::string qrLoginUrl(const Bytes& token) { return "tg://login?token=" + base64UrlEncode(token); }
 
+namespace {
+Bytes bytesOf(const std::string& s) { return Bytes(s.begin(), s.end()); }
+}  // namespace
+
+bool fetchPasswordParams(mt::RpcClient& rpc, SrpParams* out, std::string* error) {
+    TlWriter w;
+    w.u32(0x548a30f5);  // account.getPassword
+    auto res = rpc.invoke(w.take(), 20000);
+    if (!res.ok) {
+        if (error) *error = res.error.message;
+        return false;
+    }
+    try {
+        tl::TlNode root = tl::parseObject(res.body);
+        const tl::TlNode* algo = tl::getObject(root, "current_algo");
+        if (!algo) {
+            if (error) *error = "облачный пароль не задан";
+            return false;
+        }
+        if (algo->ctor != 0x3a912d4a) {
+            if (error) *error = "неподдерживаемый KDF пароля";
+            return false;
+        }
+        out->salt1 = bytesOf(tl::getString(*algo, "salt1"));
+        out->salt2 = bytesOf(tl::getString(*algo, "salt2"));
+        out->p = bytesOf(tl::getString(*algo, "p"));
+        out->g = int32_t(tl::getInt(*algo, "g"));
+        out->B = bytesOf(tl::getString(root, "srp_B"));
+        out->srpId = tl::getLong(root, "srp_id");
+        out->hint = tl::getString(root, "hint");
+        return true;
+    } catch (const ProtocolError& e) {
+        if (error) *error = e.what();
+        return false;
+    }
+}
+
+LoginToken checkPassword(mt::RpcClient& rpc, const SrpParams& params, const std::string& password) {
+    LoginToken token;
+    SrpCheck check;
+    std::string error;
+    if (!computeSrpCheck(params, password, &check, &error)) {
+        token.errorCode = 400;
+        token.errorText = error;
+        return token;
+    }
+    TlWriter inner;
+    inner.u32(0xd27ff082);  // inputCheckPasswordSRP
+    inner.i64(params.srpId);
+    inner.bytes(check.A);
+    inner.bytes(check.M1);
+    TlWriter w;
+    w.u32(0xd18b4d16);  // auth.checkPassword
+    w.raw(inner.data().data(), inner.size());
+    auto res = rpc.invoke(w.take(), 30000);
+    if (!res.ok) {
+        token.errorCode = res.error.code;
+        token.errorText = res.error.message;
+        return token;
+    }
+    size_t consumed = 0;
+    if (!parseAuthAuthorization(res.body, &token, &consumed)) {
+        token.errorCode = 400;
+        token.errorText = "не удалось разобрать authorization";
+    }
+    return token;
+}
+
 }  // namespace tgnx::api
 
 namespace tgnx::api {

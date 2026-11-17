@@ -14,6 +14,8 @@ set(TGNX_WARNINGS -Wall -Wextra -Wno-unused-parameter)
 add_library(tgnx_core STATIC
     src/core/util.cpp
     src/core/sha.cpp
+    src/core/sha512.cpp
+    src/core/srp.cpp
     src/core/aes.cpp
     src/core/bigint.cpp
     src/core/rsa.cpp

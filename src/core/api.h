@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "core/rpc.h"
+#include "core/srp.h"
 #include "core/tl.h"
 #include "core/util.h"
 
@@ -37,6 +38,9 @@ LoginToken exportLoginToken(mt::RpcClient& rpc, int apiId, const std::string& ap
 LoginToken importLoginToken(mt::RpcClient& rpc, const Bytes& token);
 
 std::string qrLoginUrl(const Bytes& token);
+
+bool fetchPasswordParams(mt::RpcClient& rpc, SrpParams* out, std::string* error);
+LoginToken checkPassword(mt::RpcClient& rpc, const SrpParams& params, const std::string& password);
 
 bool parseAuthAuthorization(const Bytes& data, LoginToken* out, size_t* consumed);
 

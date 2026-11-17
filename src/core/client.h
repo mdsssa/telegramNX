@@ -60,13 +60,14 @@ public:
     void requestDialogs(int limit = 30);
     void requestHistory(api::PeerRef peer, int limit = 40);
     void sendText(api::PeerRef peer, std::string text);
+    void submitPassword(std::string password);
 
     bool poll(ClientEvent* event);
     ClientConfig config() const;
 
 private:
     struct Command {
-        enum class Type { Dialogs, History, Send } type;
+        enum class Type { Dialogs, History, Send, Password } type;
         int limit = 30;
         api::PeerRef peer;
         std::string text;

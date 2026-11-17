@@ -33,6 +33,11 @@ ui/        программный канвас, растровые шрифты,
 - QR-логин: `auth.exportLoginToken` → `tg://login?token=...`; опрос каждые
   ~2 секунды; при `loginTokenMigrateTo` создаётся ключ на целевом DC и
   вызывается `auth.importLoginToken`.
+- 2FA: при `SESSION_PASSWORD_NEEDED` вызывается `account.getPassword`, затем
+  SRP-6a (`x = SHA256(salt2 + PBKDF2-HMAC-SHA512(SHA256(salt2+hash1+salt2),
+  salt1, 100000) + salt2)`, `S = (B - k*g^x)^(a+u*x) mod p`) и
+  `auth.checkPassword` с `inputCheckPasswordSRP`. Формулы проверены тестовым
+  вектором в `tests/crypto_test.cpp`.
 
 ## Таблица TL
 
