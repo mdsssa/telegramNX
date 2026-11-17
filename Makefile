@@ -35,9 +35,9 @@ INCLUDES:= -Isrc -Ithird_party -I$(LIBNX)/include -I$(PORTLIBS)/include
 
 CFLAGS  := -g -O2 -Wall -ffunction-sections -fdata-sections -fexceptions \
            $(ARCH) $(DEFINES) $(INCLUDES)
-CXXFLAGS:= $(CFLAGS) -std=c++17 -fno-rtti
+CXXFLAGS:= $(CFLAGS) -std=c++17
 LDFLAGS := -specs=$(LIBNX)/switch.specs -g $(ARCH) -Wl,-Map,$(BUILD)/$(TARGET).map -Wl,--gc-sections
-LIBS    := -L$(LIBNX)/lib -L$(PORTLIBS)/lib -lz -lnx
+LIBS    := -L$(LIBNX)/lib -L$(PORTLIBS)/lib -lz -lm -lnx
 
 all: $(BUILD)/$(TARGET).nro
 

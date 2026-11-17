@@ -260,30 +260,59 @@ void TelegramClient::run(ClientConfig config) {
         push({ClientEvent::Type::Info, "Авторизация успешна"});
     }
 
+    bool haveActivePeer = false;
+    api::PeerRef activePeer;
+    uint64_t lastHistoryPoll = 0;
+    uint64_t lastDialogsPoll = platform::monotonicMs();
+
     while (running_) {
         Command cmd;
-        if (!popCommand(&cmd, 150)) continue;
+        bool gotCommand = popCommand(&cmd, 150);
         try {
-            if (cmd.type == Command::Type::Dialogs) {
-                ClientEvent ev;
-                ev.type = ClientEvent::Type::Dialogs;
-                ev.dialogs = api::loadDialogs(*rpc, cmd.limit);
-                push(std::move(ev));
-            } else if (cmd.type == Command::Type::History) {
+            if (gotCommand) {
+                if (cmd.type == Command::Type::Dialogs) {
+                    ClientEvent ev;
+                    ev.type = ClientEvent::Type::Dialogs;
+                    ev.dialogs = api::loadDialogs(*rpc, cmd.limit);
+                    push(std::move(ev));
+                    lastDialogsPoll = platform::monotonicMs();
+                } else if (cmd.type == Command::Type::History) {
+                    activePeer = cmd.peer;
+                    haveActivePeer = true;
+                    ClientEvent ev;
+                    ev.type = ClientEvent::Type::History;
+                    ev.peer = cmd.peer;
+                    ev.messages = api::loadHistory(*rpc, cmd.peer, cmd.limit);
+                    push(std::move(ev));
+                    lastHistoryPoll = platform::monotonicMs();
+                } else if (cmd.type == Command::Type::Send) {
+                    uint8_t rnd[8];
+                    platform::secureRandom(rnd, sizeof(rnd));
+                    bool ok = api::sendText(*rpc, cmd.peer, cmd.text, loadLe64(rnd));
+                    ClientEvent ev;
+                    ev.type = ok ? ClientEvent::Type::Sent : ClientEvent::Type::Error;
+                    ev.text = ok ? cmd.text : "Не удалось отправить сообщение";
+                    ev.peer = cmd.peer;
+                    push(std::move(ev));
+                    activePeer = cmd.peer;
+                    haveActivePeer = true;
+                }
+            }
+            uint64_t now = platform::monotonicMs();
+            if (haveActivePeer && now - lastHistoryPoll > 3000) {
                 ClientEvent ev;
                 ev.type = ClientEvent::Type::History;
-                ev.peer = cmd.peer;
-                ev.messages = api::loadHistory(*rpc, cmd.peer, cmd.limit);
+                ev.peer = activePeer;
+                ev.messages = api::loadHistory(*rpc, activePeer, 40);
                 push(std::move(ev));
-            } else if (cmd.type == Command::Type::Send) {
-                uint8_t rnd[8];
-                platform::secureRandom(rnd, sizeof(rnd));
-                bool ok = api::sendText(*rpc, cmd.peer, cmd.text, loadLe64(rnd));
+                lastHistoryPoll = now;
+            }
+            if (now - lastDialogsPoll > 30000) {
                 ClientEvent ev;
-                ev.type = ok ? ClientEvent::Type::Sent : ClientEvent::Type::Error;
-                ev.text = ok ? cmd.text : "Не удалось отправить сообщение";
-                ev.peer = cmd.peer;
+                ev.type = ClientEvent::Type::Dialogs;
+                ev.dialogs = api::loadDialogs(*rpc, 30);
                 push(std::move(ev));
+                lastDialogsPoll = now;
             }
         } catch (const ProtocolError& e) {
             push({ClientEvent::Type::Error, std::string("TL: ") + e.what()});

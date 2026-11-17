@@ -234,20 +234,9 @@ PeerRef peerFromObject(const tl::TlNode& peer) {
 
 void writeInputPeer(TlWriter& w, const PeerRef& peer) { writePeer(w, peer); }
 
-std::vector<DialogInfo> loadDialogs(mt::RpcClient& rpc, int limit) {
-    TlWriter w;
-    w.u32(0xa0f4cb4f);  // messages.getDialogs
-    w.u32(0);           // flags
-    w.i32(0);           // offset_date
-    w.i32(0);           // offset_id
-    w.u32(0x7f3b18ea);  // inputPeerEmpty
-    w.i32(limit);
-    w.i64(0);  // hash
-    auto res = rpc.invoke(w.take(), 30000);
+std::vector<DialogInfo> parseDialogs(const Bytes& body) {
     std::vector<DialogInfo> out;
-    if (!res.ok) return out;
-
-    tl::TlNode root = tl::parseObject(res.body);
+    tl::TlNode root = tl::parseObject(body);
     const auto* dialogs = tl::getVector(root, "dialogs");
     const auto* messages = tl::getVector(root, "messages");
     const auto* chats = tl::getVector(root, "chats");
@@ -296,22 +285,23 @@ std::vector<DialogInfo> loadDialogs(mt::RpcClient& rpc, int limit) {
     return out;
 }
 
-std::vector<MessageInfo> loadHistory(mt::RpcClient& rpc, const PeerRef& peer, int limit) {
+std::vector<DialogInfo> loadDialogs(mt::RpcClient& rpc, int limit) {
     TlWriter w;
-    w.u32(0x4423e6c5);  // messages.getHistory
-    writePeer(w, peer);
-    w.i32(0);  // offset_id
-    w.i32(0);  // offset_date
-    w.i32(0);  // add_offset
+    w.u32(0xa0f4cb4f);  // messages.getDialogs
+    w.u32(0);           // flags
+    w.i32(0);           // offset_date
+    w.i32(0);           // offset_id
+    w.u32(0x7f3b18ea);  // inputPeerEmpty
     w.i32(limit);
-    w.i32(0);  // max_id
-    w.i32(0);  // min_id
     w.i64(0);  // hash
     auto res = rpc.invoke(w.take(), 30000);
-    std::vector<MessageInfo> out;
-    if (!res.ok) return out;
+    if (!res.ok) return {};
+    return parseDialogs(res.body);
+}
 
-    tl::TlNode root = tl::parseObject(res.body);
+std::vector<MessageInfo> parseHistory(const Bytes& body) {
+    std::vector<MessageInfo> out;
+    tl::TlNode root = tl::parseObject(body);
     const auto* messages = tl::getVector(root, "messages");
     if (!messages) return out;
     for (const auto& v : *messages) {
@@ -328,7 +318,25 @@ std::vector<MessageInfo> loadHistory(mt::RpcClient& rpc, const PeerRef& peer, in
         }
         out.push_back(std::move(m));
     }
+    // Telegram returns newest-first; the UI draws oldest-first.
+    std::reverse(out.begin(), out.end());
     return out;
+}
+
+std::vector<MessageInfo> loadHistory(mt::RpcClient& rpc, const PeerRef& peer, int limit) {
+    TlWriter w;
+    w.u32(0x4423e6c5);  // messages.getHistory
+    writePeer(w, peer);
+    w.i32(0);  // offset_id
+    w.i32(0);  // offset_date
+    w.i32(0);  // add_offset
+    w.i32(limit);
+    w.i32(0);  // max_id
+    w.i32(0);  // min_id
+    w.i64(0);  // hash
+    auto res = rpc.invoke(w.take(), 30000);
+    if (!res.ok) return {};
+    return parseHistory(res.body);
 }
 
 bool sendText(mt::RpcClient& rpc, const PeerRef& peer, const std::string& text, uint64_t randomId) {

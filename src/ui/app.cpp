@@ -189,6 +189,7 @@ void App::setApiInfo(const std::string& apiId, const std::string& apiHash) {
 void App::setStatus(std::string text, bool error) {
     status_ = std::move(text);
     statusError_ = error;
+    if (screen_ == Screen::Login) loginStatus_ = status_;
 }
 
 void App::selectDialog(int index, bool open) {
@@ -285,8 +286,8 @@ void App::renderDialogsScreen(Canvas& c) {
         renderChat(c, chat);
     }
     if (!status_.empty()) {
-        Rect banner{sidebarW + 16, h - 80, w - sidebarW - 32, 44};
-        if (!wide_) banner = {16, h - 80, w - 32, 44};
+        Rect banner{sidebarW + 16, 76, w - sidebarW - 32, 44};
+        if (!wide_) banner = {16, 76, w - 32, 44};
         c.fillRoundRect(banner, 12, statusError_ ? withAlpha(rgb(229, 99, 99), 220) : withAlpha(kPanelAlt, 235));
         drawText(c, fonts_->regular, banner.x + 16, banner.y + 9,
                  fonts_->regular.ellipsize(status_, float(banner.w - 32)), kText);

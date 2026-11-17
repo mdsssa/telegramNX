@@ -48,6 +48,9 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
    make
    ```
    Результат: `build_switch/telegramnx.nro`.
+   Готовый workflow для GitHub Actions лежит в
+   `.github/workflows/build-switch.yml` (собирает `.nro` в контейнере
+   devkitPro).
 4. Скопируйте на SD-карту:
    ```
    /switch/telegramnx.nro

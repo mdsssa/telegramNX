@@ -45,6 +45,11 @@ target_link_libraries(api_test PRIVATE tgnx_core)
 target_compile_options(api_test PRIVATE ${TGNX_WARNINGS})
 add_test(NAME api COMMAND api_test)
 
+add_executable(parse_test tests/parse_test.cpp)
+target_link_libraries(parse_test PRIVATE tgnx_core)
+target_compile_options(parse_test PRIVATE ${TGNX_WARNINGS})
+add_test(NAME parse COMMAND parse_test)
+
 add_library(tgnx_ui STATIC
     src/ui/canvas.cpp
     src/ui/font.cpp

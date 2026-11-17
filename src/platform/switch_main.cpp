@@ -1,6 +1,7 @@
 // Nintendo Switch entry point: framebuffer, gamepad/touch input, swkbd and
 // the Telegram client event loop.
 #include <cmath>
+#include <initializer_list>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>

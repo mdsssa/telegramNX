@@ -68,6 +68,8 @@ struct MessageInfo {
 };
 
 std::vector<DialogInfo> loadDialogs(mt::RpcClient& rpc, int limit);
+std::vector<DialogInfo> parseDialogs(const Bytes& body);
+std::vector<MessageInfo> parseHistory(const Bytes& body);
 std::vector<MessageInfo> loadHistory(mt::RpcClient& rpc, const PeerRef& peer, int limit);
 bool sendText(mt::RpcClient& rpc, const PeerRef& peer, const std::string& text, uint64_t randomId);
 void writeInputPeer(TlWriter& w, const PeerRef& peer);

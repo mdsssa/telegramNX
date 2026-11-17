@@ -59,11 +59,7 @@ void secureRandom(void* out, size_t size) { randomGet(out, size); }
 bool initNetwork() { return R_SUCCEEDED(socketInitializeDefault()); }
 void shutdownNetwork() { socketExit(); }
 
-int64_t unixTimeMs() {
-    struct timespec ts {};
-    clock_gettime(CLOCK_REALTIME, &ts);
-    return int64_t(ts.tv_sec) * 1000 + int64_t(ts.tv_nsec) / 1000000;
-}
+int64_t unixTimeMs() { return int64_t(time(nullptr)) * 1000; }
 
 uint64_t monotonicMs() { return armTicksToNs(svcGetSystemTick()) / 1000000; }
 
