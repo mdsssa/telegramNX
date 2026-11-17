@@ -158,16 +158,19 @@ bool TelegramClient::popCommand(Command* cmd, int waitMs) {
 }
 
 void TelegramClient::run(ClientConfig config) {
+    platform::logLine("client: run start dc=" + std::to_string(config.dcId) + " ip=" + config.dcIp);
     platform::initNetwork();
     std::unique_ptr<mt::ObfuscatedTransport> transport = std::make_unique<mt::ObfuscatedTransport>();
     std::unique_ptr<mt::RpcClient> rpc;
     std::string error;
 
+    platform::logLine("client: connecting");
     if (!transport->connect(config.dcIp, 443, 15000, &error)) {
         push({ClientEvent::Type::Error, "Нет соединения: " + error});
         running_ = false;
         return;
     }
+    platform::logLine("client: connected, auth=" + std::string(config.authKeyHex.empty() ? "new" : "saved"));
     mt::AuthKey key;
     if (!config.authKeyHex.empty()) {
         // Resume with the saved authorization key: no DH handshake needed.
@@ -182,6 +185,7 @@ void TelegramClient::run(ClientConfig config) {
             return;
         }
     }
+    platform::logLine("client: session created");
     rpc = std::make_unique<mt::RpcClient>(*transport, key);
     rpc->setApiCredentials(config.apiId, config.apiHash);
     rpc->setClientInfo("Nintendo Switch", "Horizon", "0.1.0");
@@ -269,6 +273,7 @@ void TelegramClient::run(ClientConfig config) {
 
         bool done = false;
         uint64_t lastQr = 0;
+        platform::logLine("client: QR login loop");
         while (running_ && !done) {
             Command loginCmd;
             if (popCommand(&loginCmd, 200)) {
@@ -280,7 +285,10 @@ void TelegramClient::run(ClientConfig config) {
             uint64_t now = platform::monotonicMs();
             if (now - lastQr < 2000) continue;
             lastQr = now;
+            platform::logLine("client: exportLoginToken request");
             api::LoginToken token = api::exportLoginToken(*rpc, config.apiId, config.apiHash);
+            platform::logLine("client: exportLoginToken result kind=" + std::to_string(int(token.kind)) +
+                              " err=" + token.errorText);
             if (token.kind == api::LoginToken::Kind::Token) {
                 push({ClientEvent::Type::Qr, api::qrLoginUrl(token.token)});
                 continue;

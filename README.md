@@ -48,7 +48,9 @@ dist/fonts/NotoSans-SemiBold.ttf
 
 SHA-256: `5d724e027fa0edb14a247ff2abf29b62e0ed93b93926e8c01bab83cc1ff3954a`
 (см. `dist/README.txt`). Архив для SD: `telegramNX-nro.zip`.
-В нём также `hello.nro` — минимальный тест libnx/консоли для диагностики.
+В нём также `hello.nro` / `hello-411.nro` — минимальные тесты libnx
+(4.12/newlib4.6 и 4.11/newlib4.5) и `telegramnx-411.nro` — запасная сборка
+для прошивок, где 4.12 не стартует.
 
 ## Сборка для Switch
 
@@ -105,6 +107,8 @@ cmake --build build -j8
 - чаты, история, отправка текста;
 - конфиг/сессия: `~/.config/telegramnx/config.ini`.
 
+Лог host-клиента: `~/.config/telegramnx/host.log` (стадии подключения и
+ошибки вида `API_ID_INVALID`).
 Управление: стрелки, `Z` = A, `X` = B, `C` = X, `V` = Y, `Esc` = назад.
 В чате печатайте с клавиатуры, `Enter` — отправить, `Backspace` — удалить.
 Мышью можно нажимать чаты/кнопки.

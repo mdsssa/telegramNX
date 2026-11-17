@@ -69,6 +69,11 @@ uint64_t monotonicMs() {
 void logLine(const std::string& line) {
     std::fprintf(stderr, "%s\n", line.c_str());
     std::fflush(stderr);
+    std::string data;
+    std::string path = configDir() + "/host.log";
+    readFile(path, &data);
+    data += line + "\n";
+    writeFile(path, data);
 }
 
 bool readFile(const std::string& path, std::string* out) {

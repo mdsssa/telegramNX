@@ -154,6 +154,8 @@ void convertMessages(const std::vector<api::MessageInfo>& messages) {
 }
 
 void startClient() {
+    platform::logLine("host: startClient api_id=" + std::to_string(g_config.apiId) +
+                      " dc=" + std::to_string(g_config.dcId) + " ip=" + g_config.dcIp);
     g_app.setScreen(ui::Screen::Login);
     g_app.setLogin("", "Подключение…");
     g_client.start(g_config);
@@ -171,6 +173,7 @@ void setupAccount() {
     g_config.dcIp = "149.154.167.51";
     saveConfig(g_config);
     g_app.setApiInfo(id, "…");
+    platform::logLine("host: setup saved api_id=" + id);
     startClient();
 }
 
@@ -236,8 +239,13 @@ void handleClientEvents() {
 }  // namespace
 
 int main(int argc, char** argv) {
-    (void)argc;
-    (void)argv;
+    std::string argApi;
+    std::string argHash;
+    for (int i = 1; i < argc; ++i) {
+        std::string a = argv[i];
+        if (a.rfind("--api=", 0) == 0) argApi = a.substr(6);
+        else if (a.rfind("--hash=", 0) == 0) argHash = a.substr(7);
+    }
     SDL_SetMainReady();
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
@@ -275,6 +283,15 @@ int main(int argc, char** argv) {
     platform::initNetwork();
     g_app.init(&g_fonts);
     g_config = loadConfig();
+    platform::logLine("host: loaded config api_id=" + std::to_string(g_config.apiId) +
+                      " dc=" + std::to_string(g_config.dcId) + " ip=" + g_config.dcIp);
+    if (!argApi.empty()) {
+        g_config.apiId = std::atoi(argApi.c_str());
+        g_config.apiHash = argHash;
+        g_config.authKeyHex.clear();
+        g_config.dcId = 2;
+        g_config.dcIp = "149.154.167.51";
+    }
     if (g_config.apiId == 0) {
         g_app.setScreen(ui::Screen::Setup);
     } else {
@@ -284,6 +301,10 @@ int main(int argc, char** argv) {
 
     g_app.onSetup = []() { setupAccount(); };
     g_app.onPhoneLogin = []() {
+        if (!g_client.running()) {
+            g_app.setStatus("Клиент не запущен: проверьте api_id/api_hash и лог host.log", true);
+            return;
+        }
         std::string phone = prompt("Номер телефона (например +79991234567)", "");
         if (phone.empty()) return;
         g_app.setStatus("Запрос кода…");
