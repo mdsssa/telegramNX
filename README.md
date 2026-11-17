@@ -9,7 +9,7 @@ Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственн
 
 ## Что уже работает
 
-- MTProto 2.0 с реальными DC Telegram: DH-рукопожатие, AES-IGA/CTR, RSA_PAD,
+- MTProto 2.0 с реальными DC Telegram: DH-рукопожатие, AES-IGE/CTR, RSA_PAD,
   обфусцированный транспорт (obfuscated2), сжатые ответы, обработка контейнеров.
 - QR-вход (`auth.exportLoginToken` / `importLoginToken`), в том числе миграция
   на домашний DC; сессия сохраняется между запусками.

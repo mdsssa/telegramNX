@@ -43,7 +43,7 @@ ui/        программный канвас, растровые шрифты,
 
 `tools/gen_tl.py` читает `tools/reference/api.tl` (слой 233), вычисляет
 замыкание типов от `User`, `Chat`, `Dialog`, `Message`, `Peer`, `Config` и
-генерирует `src/core/tl_schema_gen.cpp` (634 конструктора). `core/tl_parser`
+генерирует `src/core/tl_schema_gen.cpp` (636 конструкторов). `core/tl_parser`
 строит из ответа дерево `TlNode`/`TlValue`, поэтому парсер не ломается на
 необязательных полях вроде медиа, реакций и премиум-флагов.
 
