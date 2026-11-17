@@ -61,10 +61,7 @@ int main(int argc, char** argv) {
             std::printf("ERROR %d: %s\n", token.errorCode, token.errorText.c_str());
             return 1;
         }
-        platform::monotonicMs();
-        // Sleep ~2s between polls without pulling in a threading dependency.
-        struct timespec ts {2, 0};
-        nanosleep(&ts, nullptr);
+        platform::sleepMs(2000);
     }
     std::printf("timed out\n");
     return 1;
