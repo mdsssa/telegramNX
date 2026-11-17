@@ -149,7 +149,11 @@ bool TcpSocket::sendAll(const void* data, size_t size, int timeoutMs, std::strin
     size_t sent = 0;
     int64_t deadline = int64_t(platform::monotonicMs()) + timeoutMs;
     while (sent < size) {
+#ifdef MSG_NOSIGNAL
+        ssize_t n = ::send(fd_, p + sent, size - sent, MSG_NOSIGNAL);
+#else
         ssize_t n = ::send(fd_, p + sent, size - sent, 0);
+#endif
         if (n > 0) {
             sent += size_t(n);
             continue;
