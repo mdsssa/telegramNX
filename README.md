@@ -162,5 +162,10 @@ tools/         TL table generator and protocol references
 The config file stores the auth key; treat it as a secret. Do not commit or share
 `config.ini` or `host.log`.
 
-Code is MIT. Noto Sans fonts are OFL 1.1 (`assets/fonts/OFL.txt`).
-`stb_truetype` is public domain/MIT; `qrcodegen` is MIT.
+Code is **MIT** (OSI-approved). See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md)
+for third-party components and trademark notes. Noto Sans fonts are OFL 1.1
+(`assets/fonts/OFL.txt`); `stb_truetype` is public domain/MIT; `qrcodegen` is MIT.
+
+TelegramNX is unofficial and not affiliated with Telegram or Nintendo. You must
+provide your own Telegram API application credentials and own the console you
+run it on.

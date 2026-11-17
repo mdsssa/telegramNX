@@ -153,5 +153,9 @@ tools/       генератор TL-таблиц и референсы прото
 
 ## Лицензия
 
-Код — MIT. Шрифты Noto Sans — OFL 1.1. `stb_truetype` — public domain/MIT,
-`qrcodegen` — MIT.
+Код — **MIT**. См. [LICENSE](LICENSE) и [NOTICE.md](NOTICE.md) для сторонних
+компонентов и товарных знаков. Шрифты Noto Sans — OFL 1.1, `stb_truetype` —
+public domain/MIT, `qrcodegen` — MIT.
+
+Проект неофициальный и не связан с Telegram/Nintendo. Нужны собственные
+`api_id`/`api_hash`, а консоль должна принадлежать вам.
