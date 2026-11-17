@@ -1,155 +1,164 @@
 # TelegramNX
 
-Telegram-клиент для Nintendo Switch (homebrew, CFW). Собственный MTProto-стек:
-рукопожатие, MTProto 2.0, QR-вход, чаты, история, отправка сообщений, интерфейс
-под геймпад и тачскрин.
+A native **Telegram client for Nintendo Switch homebrew** (CFW), written from
+scratch on top of its own MTProto 2.0 stack. It also builds as an **SDL2 app for
+macOS**, so login and chats can be tested without touching the console.
 
-![Диалоги](docs/screenshots/dialogs.png)
-![Вход](docs/screenshots/login.png)
+[Русский](README.ru.md)
 
-## Что уже работает
+![Chats](docs/screenshots/dialogs.png)
+![Login](docs/screenshots/login.png)
 
-- MTProto 2.0 с реальными DC Telegram: DH-рукопожатие, AES-IGE/CTR, RSA_PAD,
-  обфусцированный транспорт (obfuscated2), сжатые ответы, обработка контейнеров.
-- QR-вход (`auth.exportLoginToken` / `importLoginToken`), в том числе миграция
-  на домашний DC; сессия сохраняется между запусками.
-- Двухфакторный облачный пароль: SRP-6a (SHA-256 + PBKDF2-HMAC-SHA512),
-  `account.getPassword` / `auth.checkPassword`.
-- Загрузка списка чатов, истории сообщений и отправка текста
+> **Status:** experimental. The macOS host app builds and starts, the Switch
+> `.nro` builds and links, but on-device startup is still being validated on
+> real hardware. Telegram requires your own **`api_id`/`api_hash`** — see below.
+
+## Features
+
+- Custom MTProto 2.0 implementation: DH exchange, `RSA_PAD`, AES-256-IGE/CTR,
+  obfuscated2 transport, `msg_container`, gzip, salts and message ids.
+- QR login (`auth.exportLoginToken` / `importLoginToken`), including DC migration.
+- Phone-number login: `auth.sendCode` → `auth.signIn` → `auth.signUp`.
+- Cloud password / 2FA via SRP-6a (SHA-256 + PBKDF2-HMAC-SHA512,
+  `account.getPassword` / `auth.checkPassword`).
+- Dialogs, message history and text sending
   (`messages.getDialogs`, `messages.getHistory`, `messages.sendMessage`).
-- UI: два-панельный список чатов, пузыри сообщений, экран входа с QR, настройки.
-- Сборка под macOS (скриншоты/тесты) и **готовый `.nro`** (devkitA64 r29.1,
-  GCC 15.2, newlib 4.6 + libnx 4.12): `dist/telegramnx.nro` (1.1 МБ) +
-  шрифты в `dist/fonts`.
+- Schema-driven TL parser (layer 233, 600+ constructors), so messages with media,
+  reactions and premium flags do not break the parser.
+- Switch UI: two-pane chat list, message bubbles, QR screen, settings;
+  gamepad + touchscreen + `swkbd`.
+- macOS SDL2 UI: same `App` and `TelegramClient`, keyboard/mouse input, modal
+  prompts for API credentials, phone code and 2FA password.
+- Session is persisted; the next launch resumes the saved auth key.
 
-## Ограничения
+## API credentials (important)
 
-- Вход по номеру/SMS-коду выведен в UI (кнопка «Войти по номеру телефона»),
-  включая `auth.signUp` для нового аккаунта и 2FA после кода; live-проверка
-  требует своего `api_id`.
-- Нет медиа (фото/видео/стикеры), редактирования, реакций и push-обновлений:
-  список и история обновляются по запросу.
-- Нужны собственные `api_id`/`api_hash` с https://my.telegram.org — встраивать
-  чужие нельзя.
-- `.nro` собран и слинкован, но на реальной консоли не запускался (устройства
-  нет). Перед раздачей прогоните его на CFW-Switch.
-- Живой вход (QR/номер), список чатов и отправка не проверены без вашего
-  `api_id`/`api_hash`; запросы/парсеры покрыты тестами, но нужен end-to-end прогон.
+Telegram requires every third-party client to identify itself with an
+application `api_id` and `api_hash`. There is **no legitimate way around this**
+for a personal-account MTProto client. The values are created at
+[my.telegram.org](https://my.telegram.org) → **Development Tools** →
+**Create application**.
 
-## Готовый `.nro`
+- `api_id` is a number, `api_hash` is 32 hex characters. This is **not** a
+  `@BotFather` bot token.
+- Telegram blocks app registration from VPN/hosting/datacenter IPs with
+  “Too many attempts”. Use a residential connection, mobile data, or ask
+  someone with a residential connection to create the app.
+- Do **not** reuse API credentials extracted from official or third-party
+  clients. That violates Telegram's rules and can get accounts restricted.
 
-В `dist/` лежит собранный комплект:
+### Distributing a fork
 
-```
-dist/telegramnx.nro
-dist/fonts/NotoSans-Regular.ttf
-dist/fonts/NotoSans-SemiBold.ttf
-```
+End users do **not** each need their own `api_id`. A fork can register one
+application and ship it as the default, so users only scan a QR code and log in
+with their own account. The credentials are extractable from the binary, so
+abuse can get the application limited; keep the app name without “Telegram” and
+comply with Telegram's API terms. The current code asks for credentials on the
+first run; embedding defaults is a small follow-up change.
 
-SHA-256: `5d724e027fa0edb14a247ff2abf29b62e0ed93b93926e8c01bab83cc1ff3954a`
-(см. `dist/README.txt`). Архив для SD: `telegramNX-nro.zip`.
-В нём также `hello.nro` / `hello-411.nro` — минимальные тесты libnx
-(4.12/newlib4.6 и 4.11/newlib4.5) и `telegramnx-411.nro` — запасная сборка
-для прошивок, где 4.12 не стартует.
-
-## Сборка для Switch
-
-1. Установите devkitPro: https://devkitpro.org/wiki/Getting_Started
-   (macOS: установщик `devkitpro-pacman-installer.pkg`, затем
-   `sudo dkp-pacman -S switch-dev switch-zlib`).
-2. Экспортируйте окружение:
-   ```sh
-   export DEVKITPRO=/opt/devkitpro
-   export DEVKITA64=$DEVKITPRO/devkitA64
-   export PATH=$DEVKITPRO/tools/bin:$DEVKITA64/bin:$PATH
-   ```
-3. Соберите:
-   ```sh
-   make
-   ```
-   Результат: `build_switch/telegramnx.nro` (проверено на devkitA64 r29.1,
-   GCC 15.2.0, newlib 4.6 + libnx 4.12.0; сборка чистая).
-   Важно: newlib 4.5 + libnx 4.12 несовместимы — падение в `fsdev_chdir`
-   до `main` на прошивке 22.x.
-   Готовый workflow для GitHub Actions лежит в
-   `.github/workflows/build-switch.yml` (собирает `.nro` в контейнере
-   devkitPro).
-4. Скопируйте на SD-карту:
-   ```
-   /switch/telegramnx.nro
-   /switch/telegramnx/fonts/NotoSans-Regular.ttf
-   /switch/telegramnx/fonts/NotoSans-SemiBold.ttf
-   ```
-   Шрифты лежат в `assets/fonts/`.
-5. Запустите через hbmenu. При первом запуске введите `api_id` и `api_hash`
-   (виртуальная клавиатура), затем отсканируйте QR в Telegram:
-   Настройки → Устройства → Подключить устройство.
-
-Конфиг и сессия: `sdmc:/switch/telegramnx/config.ini` (содержит auth key —
-не делитесь файлом).
-
-## Проверка на macOS без Switch
-
-Можно гонять **тот же UI и тот же клиент** в окне на Mac — не перекидывая
-`.nro` на консоль:
+## Quick start (macOS, no Switch needed)
 
 ```sh
-brew install sdl2        # один раз
+brew install sdl2
 cmake -S . -B build
 cmake --build build -j8
 ./build/telegramnx_host
 ```
 
-Что работает в host-окне:
+The host app uses `~/.config/telegramnx/config.ini` and writes connection
+diagnostics to `~/.config/telegramnx/host.log`.
 
-- первый запуск: `api_id`/`api_hash` вводятся в модальное окно;
-- QR-вход, телефонный вход, код и 2FA-пароль — всё в тех же prompt'ах;
-- чаты, история, отправка текста;
-- конфиг/сессия: `~/.config/telegramnx/config.ini`.
+Controls: arrows, `Z` = A, `X` = B, `C` = X, `V` = Y, `Esc` = back. In a chat,
+type on the keyboard, `Enter` sends, `Backspace` deletes. Mouse clicks work too.
 
-Лог host-клиента: `~/.config/telegramnx/host.log` (стадии подключения и
-ошибки вида `API_ID_INVALID`).
-Управление: стрелки, `Z` = A, `X` = B, `C` = X, `V` = Y, `Esc` = назад.
-В чате печатайте с клавиатуры, `Enter` — отправить, `Backspace` — удалить.
-Мышью можно нажимать чаты/кнопки.
+## Build for Nintendo Switch
 
-## Сборка и проверка на macOS
+1. Install devkitPro and the Switch package set:
+   ```sh
+   sudo dkp-pacman -S switch-dev switch-zlib
+   export DEVKITPRO=/opt/devkitpro
+   ```
+2. Build:
+   ```sh
+   make
+   ```
+   Output: `build_switch/telegramnx.nro`.
+
+Toolchain pairing matters: this project is verified with devkitA64 r29.1
+(GCC 15.2.0), **newlib 4.6** and **libnx 4.12.0**. libnx 4.12 with newlib 4.5 can
+crash in `fsdev_chdir` before `main` on firmware 22.x. A libnx 4.11.1 fallback
+build is included as `telegramnx-411.nro` for older toolchains.
+
+GitHub Actions workflows are in `.github/workflows/`: one builds the host tests,
+one builds the `.nro` in the `devkitpro/devkita64` container.
+
+### SD card layout
+
+```text
+/switch/telegramnx.nro
+/switch/telegramnx/fonts/NotoSans-Regular.ttf
+/switch/telegramnx/fonts/NotoSans-SemiBold.ttf
+```
+
+Launch `telegramnx.nro` from hbmenu. On first run enter `api_id`/`api_hash`
+with the on-screen keyboard, then scan the QR code in Telegram:
+Settings → Devices → Link Desktop Device.
+
+Session and config: `sdmc:/switch/telegramnx/config.ini` (contains an auth key —
+do not share it).
+
+### If the NRO does not start
+
+The bundle also contains `hello.nro` (libnx 4.12 + newlib 4.6) and
+`hello-411.nro` (libnx 4.11 + newlib 4.5). If both hello builds crash, the issue
+is in the hbmenu/Atmosphère/firmware setup, not in this app. If an app crashes
+after `main`, read `sdmc:/switch/telegramnx/boot.log`; it records the last
+stage (`main entered`, `fonts ok`, `framebuffer ok`, `config`, `render loop`).
+
+## Tests and diagnostics
 
 ```sh
-cmake -S . -B build
-cmake --build build -j8
-ctest --test-dir build --output-on-failure   # крипто/парсер-тесты + switch_syntax
-./build/live_auth                             # живое DH + ping к DC2
+ctest --test-dir build --output-on-failure   # crypto, TL parser, Switch syntax
+./build/live_auth                             # real DH handshake + ping to DC2
 ./build/live_config                           # RPC + gzip (help.getConfig)
-./build/ui_shots                              # скриншоты экранов
+./build/ui_shots                              # UI screenshots
 ```
 
-`live_auth` и `live_config` ходят в реальный Telegram; `live_qr` требует
-`--api=... --hash=...`.
-
-Тестовый DC и телефонный вход (нужен свой `api_id`/`api_hash`):
+`live_qr` and `live_phone` require a real `api_id`/`api_hash`:
 
 ```sh
-./build/live_phone --api=ID --hash=HASH \
-  --ip=149.154.167.40 --port=80 --dc=10002 \
-  --phone=+9996621234 --code=22222
+./build/live_qr --api=ID --hash=HASH
 ```
 
-Номер `99966XYYYY`, код — `X` пять раз (тестовые аккаунты Telegram,
-см. core.telegram.org/api/auth). Скрипт сам сделает `auth.signUp`, отправит
-сообщение в «Избранное» и перечитает историю/диалоги.
+Telegram test DCs use phone numbers `99966XYYYY` and the code `XXXXX`
+(see <https://core.telegram.org/api/auth#test-accounts>).
 
-## Структура
+## Known limitations
 
+- Live QR/phone login, dialogs and sending have not been end-to-end tested with
+  a real account in this environment; protocol requests and parsers are covered
+  by tests and live handshake checks.
+- 2FA SRP is implemented and validated against a reference vector, but not
+  exercised against a live 2FA account.
+- No media rendering, editing, reactions, or server push updates yet. The chat
+  list and history are refreshed by polling.
+- On-device Switch startup is still being validated; use the hello builds and
+  `boot.log` for diagnosis.
+
+## Layout
+
+```text
+src/core/      TL codec, crypto, DH, MTProto, RPC, API, client thread
+src/ui/        software canvas, bitmap fonts, screens
+src/platform/  macOS SDL2 host, Switch (libnx) platform
+third_party/   stb_truetype, qrcodegen
+tools/         TL table generator and protocol references
 ```
-src/core/    TL, криптография, DH, MTProto, RPC, API, клиентский поток
-src/ui/      канвас, шрифты, экраны
-src/platform/  macOS-хост и Switch (libnx)
-third_party/ stb_truetype, qrcodegen
-tools/       генератор TL-таблиц и референсы протокола
-```
 
-## Лицензия
+## Security and license
 
-Код — MIT. Шрифты Noto Sans — OFL 1.1. `stb_truetype` — public domain/MIT,
-`qrcodegen` — MIT.
+The config file stores the auth key; treat it as a secret. Do not commit or share
+`config.ini` or `host.log`.
+
+Code is MIT. Noto Sans fonts are OFL 1.1 (`assets/fonts/OFL.txt`).
+`stb_truetype` is public domain/MIT; `qrcodegen` is MIT.
