@@ -33,7 +33,8 @@ add_library(tgnx_core STATIC
 target_include_directories(tgnx_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_compile_options(tgnx_core PRIVATE ${TGNX_WARNINGS})
 find_package(ZLIB REQUIRED)
-target_link_libraries(tgnx_core PUBLIC ZLIB::ZLIB)
+find_package(Threads REQUIRED)
+target_link_libraries(tgnx_core PUBLIC ZLIB::ZLIB Threads::Threads)
 
 add_executable(crypto_test tests/crypto_test.cpp)
 target_link_libraries(crypto_test PRIVATE tgnx_core)

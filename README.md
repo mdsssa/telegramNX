@@ -1,5 +1,8 @@
 # TelegramNX
 
+[![build-linux](https://github.com/mdsssa/telegramNX/actions/workflows/build-linux.yml/badge.svg)](https://github.com/mdsssa/telegramNX/actions/workflows/build-linux.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A native **Telegram client for Nintendo Switch homebrew** (CFW), written from
 scratch on top of its own MTProto 2.0 stack. It also builds as an **SDL2 app for
 macOS**, so login and chats can be tested without touching the console.
@@ -116,6 +119,22 @@ The bundle also contains `hello.nro` (libnx 4.12 + newlib 4.6) and
 is in the hbmenu/Atmosphère/firmware setup, not in this app. If an app crashes
 after `main`, read `sdmc:/switch/telegramnx/boot.log`; it records the last
 stage (`main entered`, `fonts ok`, `framebuffer ok`, `config`, `render loop`).
+
+## Linux build check
+
+A small Linux CI job builds the portable core and runs the unit tests without
+SDL (the SDL2 host UI is macOS-oriented):
+
+```sh
+sudo apt-get install -y cmake g++ zlib1g-dev
+cmake -S . -B build-linux -DCMAKE_BUILD_TYPE=Debug -DTGNX_BUILD_HOST_UI=OFF
+cmake --build build-linux -j"$(nproc)"
+ctest --test-dir build-linux --output-on-failure
+```
+
+It covers `crypto_test`, `api_test`, `parse_test` and `switch_syntax`; the
+`build-linux` workflow runs the same commands on Ubuntu. The Linux job does not
+exercise libnx or the Switch runtime, only portable code and TL parsers.
 
 ## Tests and diagnostics
 
