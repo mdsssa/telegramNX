@@ -12,6 +12,8 @@ macOS**, so login and chats can be tested without touching the console.
 > **Status:** experimental. The macOS host app builds and starts, the Switch
 > `.nro` builds and links, but on-device startup is still being validated on
 > real hardware. Telegram requires your own **`api_id`/`api_hash`** — see below.
+>
+> Prebuilt experimental bundle: [Releases](https://github.com/mdsssa/telegramNX/releases/tag/v0.1.0).
 
 ## Features
 
