@@ -66,6 +66,10 @@ add_executable(ui_shots tests/ui_shots.cpp)
 target_link_libraries(ui_shots PRIVATE tgnx_ui)
 target_compile_options(ui_shots PRIVATE ${TGNX_WARNINGS})
 
+add_executable(live_phone tests/live_phone.cpp)
+target_link_libraries(live_phone PRIVATE tgnx_core)
+target_compile_options(live_phone PRIVATE ${TGNX_WARNINGS})
+
 add_executable(live_client tests/live_client.cpp)
 target_link_libraries(live_client PRIVATE tgnx_core)
 target_compile_options(live_client PRIVATE ${TGNX_WARNINGS})

@@ -10,6 +10,14 @@ static const FieldDef kFields_004a8537[] = {
 static const FieldDef kFields_008c703f[] = {
     {"was_online", nullptr, FieldType::Int, -1, 0},
 };
+static const FieldDef kFields_009fd736[] = {
+    {"nonce", nullptr, FieldType::Bytes, 0, 0},
+    {"play_integrity_project_id", nullptr, FieldType::Long, 0, 2},
+    {"play_integrity_nonce", nullptr, FieldType::Bytes, 0, 2},
+    {"receipt", nullptr, FieldType::String, 0, 1},
+    {"push_timeout", nullptr, FieldType::Int, 0, 1},
+    {"length", nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_01a9fbfc[] = {
     {"text", "RichText", FieldType::Boxed, -1, 0},
     {"user_id", nullptr, FieldType::Long, -1, 0},
@@ -95,6 +103,9 @@ static const FieldDef kFields_068e9916[] = {
     {"token", nullptr, FieldType::Bytes, -1, 0},
 };
 static const FieldDef kFields_06e425c4[] = {
+    {nullptr, nullptr, FieldType::Int, -1, 0},
+};
+static const FieldDef kFields_06ed998c[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
 static const FieldDef kFields_07141dbf[] = {
@@ -321,6 +332,10 @@ static const FieldDef kFields_1b287353[] = {
     {"values", "SecureValue", FieldType::Vector, -1, 0},
     {"credentials", "SecureCredentialsEncrypted", FieldType::Boxed, -1, 0},
 };
+static const FieldDef kFields_1b3faa88[] = {
+    {"hash", nullptr, FieldType::String, -1, 0},
+    {"settings", "CodeSettings", FieldType::Boxed, -1, 0},
+};
 static const FieldDef kFields_1bb00451[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
@@ -416,6 +431,9 @@ static const FieldDef kFields_2238f214[] = {
 static const FieldDef kFields_22567115[] = {
     {"query", nullptr, FieldType::String, 0, 0},
 };
+static const FieldDef kFields_226ccefb[] = {
+    {nullptr, nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_2271f2bf[] = {
     {"coordinates", "MediaAreaCoordinates", FieldType::Boxed, -1, 0},
     {"channel", "InputChannel", FieldType::Boxed, -1, 0},
@@ -434,6 +452,9 @@ static const FieldDef kFields_22ddd30c[] = {
 };
 static const FieldDef kFields_2331b22d[] = {
     {"id", nullptr, FieldType::Long, -1, 0},
+};
+static const FieldDef kFields_2390fe44[] = {
+    {"authorization", "auth.Authorization", FieldType::Boxed, -1, 0},
 };
 static const FieldDef kFields_24c26789[] = {
     {"text", "RichText", FieldType::Boxed, -1, 0},
@@ -730,6 +751,9 @@ static const FieldDef kFields_3cd2a36a[] = {
 static const FieldDef kFields_3dac6a00[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
+static const FieldDef kFields_3dbb5986[] = {
+    {"length", nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_3ded6320[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
@@ -1013,6 +1037,9 @@ static const FieldDef kFields_52d8ccd9[] = {
     {"video_timestamp", nullptr, FieldType::Int, 0, 10},
     {"ttl_seconds", nullptr, FieldType::Int, 0, 2},
 };
+static const FieldDef kFields_5353e5a7[] = {
+    {"length", nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_5367e5be[] = {
     {"id", nullptr, FieldType::Long, -1, 0},
     {"access_hash", nullptr, FieldType::Long, -1, 0},
@@ -1048,6 +1075,11 @@ static const FieldDef kFields_565251e2[] = {
 };
 static const FieldDef kFields_56e0d474[] = {
     {"geo", "GeoPoint", FieldType::Boxed, -1, 0},
+};
+static const FieldDef kFields_56e59f9c[] = {
+    {"phone_number", nullptr, FieldType::String, -1, 0},
+    {"phone_code_hash", nullptr, FieldType::String, -1, 0},
+    {"form_id", nullptr, FieldType::Long, -1, 0},
 };
 static const FieldDef kFields_56e9f0e4[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
@@ -1102,6 +1134,12 @@ static const FieldDef kFields_5d20bae8[] = {
 };
 static const FieldDef kFields_5da674b7[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
+};
+static const FieldDef kFields_5e002502[] = {
+    {"type", "auth.SentCodeType", FieldType::Boxed, -1, 0},
+    {"phone_code_hash", nullptr, FieldType::String, -1, 0},
+    {"next_type", "auth.CodeType", FieldType::Boxed, 0, 1},
+    {"timeout", nullptr, FieldType::Int, 0, 2},
 };
 static const FieldDef kFields_5ec4be43[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
@@ -1376,6 +1414,9 @@ static const FieldDef kFields_71e094f3[] = {
 static const FieldDef kFields_72091c80[] = {
     {"slug", nullptr, FieldType::String, -1, 0},
 };
+static const FieldDef kFields_72a3158c[] = {
+    {nullptr, nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_72f0eaae[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
@@ -1396,6 +1437,9 @@ static const FieldDef kFields_73ada76b[] = {
     {"expired", nullptr, FieldType::True, 0, 0},
     {"gift", "StarGift", FieldType::Boxed, -1, 0},
     {"price", "StarsAmount", FieldType::Boxed, -1, 0},
+};
+static const FieldDef kFields_741cd3e3[] = {
+    {nullptr, nullptr, FieldType::Int, -1, 0},
 };
 static const FieldDef kFields_744694e0[] = {
     {"text", nullptr, FieldType::String, -1, 0},
@@ -1695,6 +1739,10 @@ static const FieldDef kFields_7e1c1187[] = {
 static const FieldDef kFields_7e6260d7[] = {
     {"texts", "RichText", FieldType::Vector, -1, 0},
 };
+static const FieldDef kFields_7e960193[] = {
+    {"phone_number", nullptr, FieldType::String, -1, 0},
+    {"phone_code_hash", nullptr, FieldType::String, -1, 0},
+};
 static const FieldDef kFields_7ef0dd87[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
@@ -1716,6 +1764,14 @@ static const FieldDef kFields_80e11a7f[] = {
     {"call_id", nullptr, FieldType::Long, -1, 0},
     {"reason", "PhoneCallDiscardReason", FieldType::Boxed, 0, 0},
     {"duration", nullptr, FieldType::Int, 0, 1},
+};
+static const FieldDef kFields_82006484[] = {
+    {"prefix", nullptr, FieldType::String, -1, 0},
+    {"length", nullptr, FieldType::Int, -1, 0},
+};
+static const FieldDef kFields_82574ae5[] = {
+    {"phone_number", nullptr, FieldType::String, -1, 0},
+    {"settings", "CodeSettings", FieldType::Boxed, -1, 0},
 };
 static const FieldDef kFields_826f8b60[] = {
     {"offset", nullptr, FieldType::Int, -1, 0},
@@ -2223,6 +2279,9 @@ static const FieldDef kFields_a3d1cb80[] = {
     {"reaction", "Reaction", FieldType::Boxed, -1, 0},
     {"count", nullptr, FieldType::Int, -1, 0},
 };
+static const FieldDef kFields_a416ac81[] = {
+    {"beginning", nullptr, FieldType::String, 0, 0},
+};
 static const FieldDef kFields_a437c3ed[] = {
     {"id", nullptr, FieldType::Long, -1, 0},
     {"creator", nullptr, FieldType::True, 0, 0},
@@ -2247,6 +2306,10 @@ static const FieldDef kFields_a44f3ef6[] = {
     {"h", nullptr, FieldType::Int, -1, 0},
     {"caption", "PageCaption", FieldType::Boxed, -1, 0},
 };
+static const FieldDef kFields_a5491dea[] = {
+    {"apple_signin_allowed", nullptr, FieldType::True, 0, 0},
+    {"google_signin_allowed", nullptr, FieldType::True, 0, 1},
+};
 static const FieldDef kFields_a56c2a3e[] = {
     {"pts", nullptr, FieldType::Int, -1, 0},
     {"qts", nullptr, FieldType::Int, -1, 0},
@@ -2257,6 +2320,10 @@ static const FieldDef kFields_a56c2a3e[] = {
 static const FieldDef kFields_a57a7dad[] = {
     {"id", nullptr, FieldType::Long, -1, 0},
     {"bytes", nullptr, FieldType::Bytes, -1, 0},
+};
+static const FieldDef kFields_a5a356f9[] = {
+    {"phone_number", nullptr, FieldType::String, -1, 0},
+    {"settings", "CodeSettings", FieldType::Boxed, -1, 0},
 };
 static const FieldDef kFields_a5b45e2b[] = {
     {"relative", nullptr, FieldType::True, 0, 0},
@@ -2270,6 +2337,12 @@ static const FieldDef kFields_a5b45e2b[] = {
 };
 static const FieldDef kFields_a676a322[] = {
     {"id", nullptr, FieldType::Int, -1, 0},
+};
+static const FieldDef kFields_a677244f[] = {
+    {"phone_number", nullptr, FieldType::String, -1, 0},
+    {"api_id", nullptr, FieldType::Int, -1, 0},
+    {"api_hash", nullptr, FieldType::String, -1, 0},
+    {"settings", "CodeSettings", FieldType::Boxed, -1, 0},
 };
 static const FieldDef kFields_a80f51e4[] = {
     {"stars", nullptr, FieldType::Long, 0, 0},
@@ -2333,6 +2406,9 @@ static const FieldDef kFields_aac7b717[] = {
 static const FieldDef kFields_aacfff84[] = {
     {"quiz", nullptr, FieldType::Bool, 0, 0},
 };
+static const FieldDef kFields_ab03c6d9[] = {
+    {"pattern", nullptr, FieldType::String, -1, 0},
+};
 static const FieldDef kFields_abbbd346[] = {
     {"peer", "InputPeer", FieldType::Boxed, -1, 0},
     {"id", nullptr, FieldType::Int, -1, 0},
@@ -2349,6 +2425,17 @@ static const FieldDef kFields_ac6a83aa[] = {
 static const FieldDef kFields_acfa1a7e[] = {
     {"id", nullptr, FieldType::Int, -1, 0},
     {"query_id", nullptr, FieldType::Long, -1, 0},
+};
+static const FieldDef kFields_ad253d78[] = {
+    {"allow_flashcall", nullptr, FieldType::True, 0, 0},
+    {"current_number", nullptr, FieldType::True, 0, 1},
+    {"allow_app_hash", nullptr, FieldType::True, 0, 4},
+    {"allow_missed_call", nullptr, FieldType::True, 0, 5},
+    {"allow_firebase", nullptr, FieldType::True, 0, 7},
+    {"unknown_number", nullptr, FieldType::True, 0, 9},
+    {"logout_tokens", "bytes", FieldType::Vector, 0, 6},
+    {"token", nullptr, FieldType::String, 0, 8},
+    {"app_sandbox", nullptr, FieldType::Bool, 0, 8},
 };
 static const FieldDef kFields_ad628cc8[] = {
     {"w", nullptr, FieldType::Int, 0, 0},
@@ -2470,6 +2557,9 @@ static const FieldDef kFields_b2b15770[] = {
 };
 static const FieldDef kFields_b320aadb[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
+};
+static const FieldDef kFields_b37794af[] = {
+    {"beginning", nullptr, FieldType::String, 0, 0},
 };
 static const FieldDef kFields_b390dc08[] = {
     {"url", nullptr, FieldType::String, -1, 0},
@@ -2677,6 +2767,9 @@ static const FieldDef kFields_bfd02da2[] = {
 static const FieldDef kFields_bfd064ec[] = {
     {"text", "RichText", FieldType::Boxed, -1, 0},
 };
+static const FieldDef kFields_c000bba2[] = {
+    {"length", nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_c01a597a[] = {
     {"url", nullptr, FieldType::String, -1, 0},
 };
@@ -2810,6 +2903,11 @@ static const FieldDef kFields_cad5452d[] = {
     {"geo", "GeoPoint", FieldType::Boxed, -1, 0},
     {"address", "GeoPointAddress", FieldType::Boxed, 0, 0},
 };
+static const FieldDef kFields_cae47523[] = {
+    {"phone_number", nullptr, FieldType::String, -1, 0},
+    {"phone_code_hash", nullptr, FieldType::String, -1, 0},
+    {"reason", nullptr, FieldType::String, 0, 0},
+};
 static const FieldDef kFields_cb296bf8[] = {
     {"label", nullptr, FieldType::String, -1, 0},
     {"amount", nullptr, FieldType::Long, -1, 0},
@@ -2933,6 +3031,9 @@ static const FieldDef kFields_d3bc4b7a[] = {
 static const FieldDef kFields_d45ab096[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
+static const FieldDef kFields_d61ad6ee[] = {
+    {nullptr, nullptr, FieldType::Int, -1, 0},
+};
 static const FieldDef kFields_d62ff46a[] = {
     {"user_id", nullptr, FieldType::Long, -1, 0},
     {"first_name", nullptr, FieldType::String, 0, 0},
@@ -2953,6 +3054,10 @@ static const FieldDef kFields_d8aa840f[] = {
 };
 static const FieldDef kFields_d912a59c[] = {
     {"text", "RichText", FieldType::Boxed, -1, 0},
+};
+static const FieldDef kFields_d9565c39[] = {
+    {"url", nullptr, FieldType::String, -1, 0},
+    {"length", nullptr, FieldType::Int, -1, 0},
 };
 static const FieldDef kFields_d95c6154[] = {
     {"types", "SecureValueType", FieldType::Vector, -1, 0},
@@ -3279,6 +3384,14 @@ static const FieldDef kFields_f3a9244a[] = {
 static const FieldDef kFields_f3f25f76[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
 };
+static const FieldDef kFields_f450f59b[] = {
+    {"apple_signin_allowed", nullptr, FieldType::True, 0, 0},
+    {"google_signin_allowed", nullptr, FieldType::True, 0, 1},
+    {"email_pattern", nullptr, FieldType::String, -1, 0},
+    {"length", nullptr, FieldType::Int, -1, 0},
+    {"reset_available_period", nullptr, FieldType::Int, 0, 3},
+    {"reset_pending_date", nullptr, FieldType::Int, 0, 4},
+};
 static const FieldDef kFields_f516760b[] = {
     {"peer", "InputPeer", FieldType::Boxed, -1, 0},
     {"hash", nullptr, FieldType::Long, -1, 0},
@@ -3318,6 +3431,15 @@ static const FieldDef kFields_f7e8d89b[] = {
 static const FieldDef kFields_f85c413c[] = {
     {"emoji_id", nullptr, FieldType::Long, -1, 0},
     {"background_colors", "int", FieldType::Vector, -1, 0},
+};
+static const FieldDef kFields_f8827ebf[] = {
+    {"store_product", nullptr, FieldType::String, -1, 0},
+    {"phone_code_hash", nullptr, FieldType::String, -1, 0},
+    {"support_email_address", nullptr, FieldType::String, -1, 0},
+    {"support_email_subject", nullptr, FieldType::String, -1, 0},
+    {"premium_days", nullptr, FieldType::Int, -1, 0},
+    {"currency", nullptr, FieldType::String, -1, 0},
+    {"amount", nullptr, FieldType::Long, -1, 0},
 };
 static const FieldDef kFields_f888fa1a[] = {
     {nullptr, nullptr, FieldType::Int, -1, 0},
@@ -3493,6 +3615,7 @@ static const FieldDef kFields_fffe1bac[] = {
 const CtorDef kCtors[] = {
     {0x004a8537u, "securePasswordKdfAlgoUnknown", kFields_004a8537, (uint16_t)(sizeof(kFields_004a8537) / sizeof(FieldDef)), 0, 0},
     {0x008c703fu, "userStatusOffline", kFields_008c703f, (uint16_t)(sizeof(kFields_008c703f) / sizeof(FieldDef)), 0, 0},
+    {0x009fd736u, "auth.sentCodeTypeFirebaseSms", kFields_009fd736, (uint16_t)(sizeof(kFields_009fd736) / sizeof(FieldDef)), 1, 0},
     {0x01a9fbfcu, "textMentionName", kFields_01a9fbfc, (uint16_t)(sizeof(kFields_01a9fbfc) / sizeof(FieldDef)), 0, 0},
     {0x01c641c2u, "webPageAttributeStarGiftAuction", kFields_01c641c2, (uint16_t)(sizeof(kFields_01c641c2) / sizeof(FieldDef)), 0, 0},
     {0x021e1ad6u, "photoCachedSize", kFields_021e1ad6, (uint16_t)(sizeof(kFields_021e1ad6) / sizeof(FieldDef)), 0, 0},
@@ -3510,6 +3633,7 @@ const CtorDef kCtors[] = {
     {0x0652c1c5u, "messageEntityDiffDelete", kFields_0652c1c5, (uint16_t)(sizeof(kFields_0652c1c5) / sizeof(FieldDef)), 0, 0},
     {0x068e9916u, "auth.loginTokenMigrateTo", kFields_068e9916, (uint16_t)(sizeof(kFields_068e9916) / sizeof(FieldDef)), 0, 0},
     {0x06e425c4u, "secureValueTypeDriverLicense", kFields_06e425c4, (uint16_t)(sizeof(kFields_06e425c4) / sizeof(FieldDef)), 0, 0},
+    {0x06ed998cu, "auth.codeTypeFragmentSms", kFields_06ed998c, (uint16_t)(sizeof(kFields_06ed998c) / sizeof(FieldDef)), 0, 0},
     {0x07141dbfu, "inputEmojiStatusCollectible", kFields_07141dbf, (uint16_t)(sizeof(kFields_07141dbf) / sizeof(FieldDef)), 1, 0},
     {0x081ccf4fu, "textImage", kFields_081ccf4f, (uint16_t)(sizeof(kFields_081ccf4f) / sizeof(FieldDef)), 0, 0},
     {0x087fc5e7u, "bots.invokeWebViewCustomMethod", kFields_087fc5e7, (uint16_t)(sizeof(kFields_087fc5e7) / sizeof(FieldDef)), 0, 0},
@@ -3553,6 +3677,7 @@ const CtorDef kCtors[] = {
     {0x1b0c841au, "draftMessageEmpty", kFields_1b0c841a, (uint16_t)(sizeof(kFields_1b0c841a) / sizeof(FieldDef)), 1, 0},
     {0x1b2286b8u, "reactionEmoji", kFields_1b2286b8, (uint16_t)(sizeof(kFields_1b2286b8) / sizeof(FieldDef)), 0, 0},
     {0x1b287353u, "messageActionSecureValuesSentMe", kFields_1b287353, (uint16_t)(sizeof(kFields_1b287353) / sizeof(FieldDef)), 0, 0},
+    {0x1b3faa88u, "account.sendConfirmPhoneCode", kFields_1b3faa88, (uint16_t)(sizeof(kFields_1b3faa88) / sizeof(FieldDef)), 0, 0},
     {0x1bb00451u, "inputMessagesFilterPinned", kFields_1bb00451, (uint16_t)(sizeof(kFields_1bb00451) / sizeof(FieldDef)), 0, 0},
     {0x1c3db333u, "account.uploadTheme", kFields_1c3db333, (uint16_t)(sizeof(kFields_1c3db333) / sizeof(FieldDef)), 1, 0},
     {0x1c570ed1u, "webDocument", kFields_1c570ed1, (uint16_t)(sizeof(kFields_1c570ed1) / sizeof(FieldDef)), 0, 0},
@@ -3572,9 +3697,11 @@ const CtorDef kCtors[] = {
     {0x221bb5e4u, "todoCompletion", kFields_221bb5e4, (uint16_t)(sizeof(kFields_221bb5e4) / sizeof(FieldDef)), 0, 0},
     {0x2238f214u, "messageMediaWidget", kFields_2238f214, (uint16_t)(sizeof(kFields_2238f214) / sizeof(FieldDef)), 1, 0},
     {0x22567115u, "channels.checkSearchPostsFlood", kFields_22567115, (uint16_t)(sizeof(kFields_22567115) / sizeof(FieldDef)), 1, 0},
+    {0x226ccefbu, "auth.codeTypeFlashCall", kFields_226ccefb, (uint16_t)(sizeof(kFields_226ccefb) / sizeof(FieldDef)), 0, 0},
     {0x2271f2bfu, "inputMediaAreaChannelPost", kFields_2271f2bf, (uint16_t)(sizeof(kFields_2271f2bf) / sizeof(FieldDef)), 0, 0},
     {0x22ddd30cu, "messages.getReplies", kFields_22ddd30c, (uint16_t)(sizeof(kFields_22ddd30c) / sizeof(FieldDef)), 0, 0},
     {0x2331b22du, "photoEmpty", kFields_2331b22d, (uint16_t)(sizeof(kFields_2331b22d) / sizeof(FieldDef)), 0, 0},
+    {0x2390fe44u, "auth.sentCodeSuccess", kFields_2390fe44, (uint16_t)(sizeof(kFields_2390fe44) / sizeof(FieldDef)), 0, 0},
     {0x24c26789u, "textAutoPhone", kFields_24c26789, (uint16_t)(sizeof(kFields_24c26789) / sizeof(FieldDef)), 0, 0},
     {0x27bb1adcu, "inputNotifyCommunity", kFields_27bb1adc, (uint16_t)(sizeof(kFields_27bb1adc) / sizeof(FieldDef)), 0, 0},
     {0x27bcbbfcu, "inputPeerChannel", kFields_27bcbbfc, (uint16_t)(sizeof(kFields_27bcbbfc) / sizeof(FieldDef)), 0, 0},
@@ -3632,6 +3759,7 @@ const CtorDef kCtors[] = {
     {0x3c29a3e2u, "pageBlockThinking", kFields_3c29a3e2, (uint16_t)(sizeof(kFields_3c29a3e2) / sizeof(FieldDef)), 0, 0},
     {0x3cd2a36au, "textTonAddress", kFields_3cd2a36a, (uint16_t)(sizeof(kFields_3cd2a36a) / sizeof(FieldDef)), 0, 0},
     {0x3dac6a00u, "secureValueTypePassport", kFields_3dac6a00, (uint16_t)(sizeof(kFields_3dac6a00) / sizeof(FieldDef)), 0, 0},
+    {0x3dbb5986u, "auth.sentCodeTypeApp", kFields_3dbb5986, (uint16_t)(sizeof(kFields_3dbb5986) / sizeof(FieldDef)), 0, 0},
     {0x3ded6320u, "messageMediaEmpty", kFields_3ded6320, (uint16_t)(sizeof(kFields_3ded6320) / sizeof(FieldDef)), 0, 0},
     {0x3e0b5b6au, "searchPostsFlood", kFields_3e0b5b6a, (uint16_t)(sizeof(kFields_3e0b5b6a) / sizeof(FieldDef)), 1, 0},
     {0x3e0bdd7cu, "account.updateUsername", kFields_3e0bdd7c, (uint16_t)(sizeof(kFields_3e0bdd7c) / sizeof(FieldDef)), 0, 0},
@@ -3683,6 +3811,7 @@ const CtorDef kCtors[] = {
     {0x51e6ee4fu, "storyItemDeleted", kFields_51e6ee4f, (uint16_t)(sizeof(kFields_51e6ee4f) / sizeof(FieldDef)), 0, 0},
     {0x523da4ebu, "reactionPaid", kFields_523da4eb, (uint16_t)(sizeof(kFields_523da4eb) / sizeof(FieldDef)), 0, 0},
     {0x52d8ccd9u, "messageMediaDocument", kFields_52d8ccd9, (uint16_t)(sizeof(kFields_52d8ccd9) / sizeof(FieldDef)), 1, 0},
+    {0x5353e5a7u, "auth.sentCodeTypeCall", kFields_5353e5a7, (uint16_t)(sizeof(kFields_5353e5a7) / sizeof(FieldDef)), 0, 0},
     {0x5367e5beu, "inputSecureFile", kFields_5367e5be, (uint16_t)(sizeof(kFields_5367e5be) / sizeof(FieldDef)), 0, 0},
     {0x53f3ce5au, "inputInlineButtonTypeUserProfile", kFields_53f3ce5a, (uint16_t)(sizeof(kFields_53f3ce5a) / sizeof(FieldDef)), 0, 0},
     {0x541a1d1au, "userStatusLastWeek", kFields_541a1d1a, (uint16_t)(sizeof(kFields_541a1d1a) / sizeof(FieldDef)), 1, 0},
@@ -3692,6 +3821,7 @@ const CtorDef kCtors[] = {
     {0x55fb0996u, "messages.getPersonalChannelHistory", kFields_55fb0996, (uint16_t)(sizeof(kFields_55fb0996) / sizeof(FieldDef)), 0, 0},
     {0x565251e2u, "starGiftAttributeModel", kFields_565251e2, (uint16_t)(sizeof(kFields_565251e2) / sizeof(FieldDef)), 1, 0},
     {0x56e0d474u, "messageMediaGeo", kFields_56e0d474, (uint16_t)(sizeof(kFields_56e0d474) / sizeof(FieldDef)), 0, 0},
+    {0x56e59f9cu, "auth.checkPaidAuth", kFields_56e59f9c, (uint16_t)(sizeof(kFields_56e59f9c) / sizeof(FieldDef)), 0, 0},
     {0x56e9f0e4u, "inputMessagesFilterPhotoVideo", kFields_56e9f0e4, (uint16_t)(sizeof(kFields_56e9f0e4) / sizeof(FieldDef)), 0, 0},
     {0x574b617fu, "inputPageBlockMap", kFields_574b617f, (uint16_t)(sizeof(kFields_574b617f) / sizeof(FieldDef)), 0, 0},
     {0x5787686du, "mediaAreaStarGift", kFields_5787686d, (uint16_t)(sizeof(kFields_5787686d) / sizeof(FieldDef)), 0, 0},
@@ -3707,6 +3837,7 @@ const CtorDef kCtors[] = {
     {0x5cd3709du, "inlineButtonTypeGame", kFields_5cd3709d, (uint16_t)(sizeof(kFields_5cd3709d) / sizeof(FieldDef)), 0, 0},
     {0x5d20bae8u, "messageActionChangeCommunity", kFields_5d20bae8, (uint16_t)(sizeof(kFields_5d20bae8) / sizeof(FieldDef)), 1, 0},
     {0x5da674b7u, "botAppNotModified", kFields_5da674b7, (uint16_t)(sizeof(kFields_5da674b7) / sizeof(FieldDef)), 0, 0},
+    {0x5e002502u, "auth.sentCode", kFields_5e002502, (uint16_t)(sizeof(kFields_5e002502) / sizeof(FieldDef)), 1, 0},
     {0x5ec4be43u, "inlineQueryPeerTypeMegagroup", kFields_5ec4be43, (uint16_t)(sizeof(kFields_5ec4be43) / sizeof(FieldDef)), 0, 0},
     {0x5f206716u, "messages.messagesSlice", kFields_5f206716, (uint16_t)(sizeof(kFields_5f206716) / sizeof(FieldDef)), 1, 0},
     {0x5f3b8a00u, "requestPeerTypeUser", kFields_5f3b8a00, (uint16_t)(sizeof(kFields_5f3b8a00) / sizeof(FieldDef)), 1, 0},
@@ -3757,11 +3888,13 @@ const CtorDef kCtors[] = {
     {0x71bd134cu, "dialogFolder", kFields_71bd134c, (uint16_t)(sizeof(kFields_71bd134c) / sizeof(FieldDef)), 1, 0},
     {0x71e094f3u, "messages.dialogsSlice", kFields_71e094f3, (uint16_t)(sizeof(kFields_71e094f3) / sizeof(FieldDef)), 0, 0},
     {0x72091c80u, "inputWallPaperSlug", kFields_72091c80, (uint16_t)(sizeof(kFields_72091c80) / sizeof(FieldDef)), 0, 0},
+    {0x72a3158cu, "auth.codeTypeSms", kFields_72a3158c, (uint16_t)(sizeof(kFields_72a3158c) / sizeof(FieldDef)), 0, 0},
     {0x72f0eaaeu, "inputDocumentEmpty", kFields_72f0eaae, (uint16_t)(sizeof(kFields_72f0eaae) / sizeof(FieldDef)), 0, 0},
     {0x7307544fu, "requestedPeerChat", kFields_7307544f, (uint16_t)(sizeof(kFields_7307544f) / sizeof(FieldDef)), 1, 0},
     {0x7311ca11u, "webPageNotModified", kFields_7311ca11, (uint16_t)(sizeof(kFields_7311ca11) / sizeof(FieldDef)), 1, 0},
     {0x73924be0u, "messageEntityPre", kFields_73924be0, (uint16_t)(sizeof(kFields_73924be0) / sizeof(FieldDef)), 0, 0},
     {0x73ada76bu, "messageActionStarGiftPurchaseOfferDeclined", kFields_73ada76b, (uint16_t)(sizeof(kFields_73ada76b) / sizeof(FieldDef)), 1, 0},
+    {0x741cd3e3u, "auth.codeTypeCall", kFields_741cd3e3, (uint16_t)(sizeof(kFields_741cd3e3) / sizeof(FieldDef)), 0, 0},
     {0x744694e0u, "textPlain", kFields_744694e0, (uint16_t)(sizeof(kFields_744694e0) / sizeof(FieldDef)), 0, 0},
     {0x74535f21u, "messages.messagesNotModified", kFields_74535f21, (uint16_t)(sizeof(kFields_74535f21) / sizeof(FieldDef)), 0, 0},
     {0x74aee3e0u, "starsTonAmount", kFields_74aee3e0, (uint16_t)(sizeof(kFields_74aee3e0) / sizeof(FieldDef)), 0, 0},
@@ -3798,12 +3931,15 @@ const CtorDef kCtors[] = {
     {0x7da07ec9u, "inputPeerSelf", kFields_7da07ec9, (uint16_t)(sizeof(kFields_7da07ec9) / sizeof(FieldDef)), 0, 0},
     {0x7e1c1187u, "messageActionStarGiftUnique", kFields_7e1c1187, (uint16_t)(sizeof(kFields_7e1c1187) / sizeof(FieldDef)), 1, 0},
     {0x7e6260d7u, "textConcat", kFields_7e6260d7, (uint16_t)(sizeof(kFields_7e6260d7) / sizeof(FieldDef)), 0, 0},
+    {0x7e960193u, "auth.resetLoginEmail", kFields_7e960193, (uint16_t)(sizeof(kFields_7e960193) / sizeof(FieldDef)), 0, 0},
     {0x7ef0dd87u, "inputMessagesFilterUrl", kFields_7ef0dd87, (uint16_t)(sizeof(kFields_7ef0dd87) / sizeof(FieldDef)), 0, 0},
     {0x7f3b18eau, "inputPeerEmpty", kFields_7f3b18ea, (uint16_t)(sizeof(kFields_7f3b18ea) / sizeof(FieldDef)), 0, 0},
     {0x7fcb13a8u, "messageActionChatEditPhoto", kFields_7fcb13a8, (uint16_t)(sizeof(kFields_7fcb13a8) / sizeof(FieldDef)), 0, 0},
     {0x804361eau, "pageBlockAudio", kFields_804361ea, (uint16_t)(sizeof(kFields_804361ea) / sizeof(FieldDef)), 0, 0},
     {0x80c99768u, "inputMessagesFilterPhoneCalls", kFields_80c99768, (uint16_t)(sizeof(kFields_80c99768) / sizeof(FieldDef)), 1, 0},
     {0x80e11a7fu, "messageActionPhoneCall", kFields_80e11a7f, (uint16_t)(sizeof(kFields_80e11a7f) / sizeof(FieldDef)), 1, 0},
+    {0x82006484u, "auth.sentCodeTypeMissedCall", kFields_82006484, (uint16_t)(sizeof(kFields_82006484) / sizeof(FieldDef)), 0, 0},
+    {0x82574ae5u, "account.sendChangePhoneCode", kFields_82574ae5, (uint16_t)(sizeof(kFields_82574ae5) / sizeof(FieldDef)), 0, 0},
     {0x826f8b60u, "messageEntityItalic", kFields_826f8b60, (uint16_t)(sizeof(kFields_826f8b60) / sizeof(FieldDef)), 0, 0},
     {0x82d1f706u, "userProfilePhoto", kFields_82d1f706, (uint16_t)(sizeof(kFields_82d1f706) / sizeof(FieldDef)), 1, 0},
     {0x830b9ae4u, "notificationSoundLocal", kFields_830b9ae4, (uint16_t)(sizeof(kFields_830b9ae4) / sizeof(FieldDef)), 0, 0},
@@ -3895,14 +4031,18 @@ const CtorDef kCtors[] = {
     {0xa26156c0u, "textCustomEmoji", kFields_a26156c0, (uint16_t)(sizeof(kFields_a26156c0) / sizeof(FieldDef)), 0, 0},
     {0xa2a5371eu, "peerChannel", kFields_a2a5371e, (uint16_t)(sizeof(kFields_a2a5371e) / sizeof(FieldDef)), 0, 0},
     {0xa3d1cb80u, "reactionCount", kFields_a3d1cb80, (uint16_t)(sizeof(kFields_a3d1cb80) / sizeof(FieldDef)), 1, 0},
+    {0xa416ac81u, "auth.sentCodeTypeSmsWord", kFields_a416ac81, (uint16_t)(sizeof(kFields_a416ac81) / sizeof(FieldDef)), 1, 0},
     {0xa437c3edu, "wallPaper", kFields_a437c3ed, (uint16_t)(sizeof(kFields_a437c3ed) / sizeof(FieldDef)), 1, 0},
     {0xa438619du, "inlineButtonTypeDisabled", kFields_a438619d, (uint16_t)(sizeof(kFields_a438619d) / sizeof(FieldDef)), 0, 0},
     {0xa43f30ccu, "messageActionChatDeleteUser", kFields_a43f30cc, (uint16_t)(sizeof(kFields_a43f30cc) / sizeof(FieldDef)), 0, 0},
     {0xa44f3ef6u, "pageBlockMap", kFields_a44f3ef6, (uint16_t)(sizeof(kFields_a44f3ef6) / sizeof(FieldDef)), 0, 0},
+    {0xa5491deau, "auth.sentCodeTypeSetUpEmailRequired", kFields_a5491dea, (uint16_t)(sizeof(kFields_a5491dea) / sizeof(FieldDef)), 1, 0},
     {0xa56c2a3eu, "updates.state", kFields_a56c2a3e, (uint16_t)(sizeof(kFields_a56c2a3e) / sizeof(FieldDef)), 0, 0},
     {0xa57a7dadu, "auth.importAuthorization", kFields_a57a7dad, (uint16_t)(sizeof(kFields_a57a7dad) / sizeof(FieldDef)), 0, 0},
+    {0xa5a356f9u, "account.sendVerifyPhoneCode", kFields_a5a356f9, (uint16_t)(sizeof(kFields_a5a356f9) / sizeof(FieldDef)), 0, 0},
     {0xa5b45e2bu, "textDate", kFields_a5b45e2b, (uint16_t)(sizeof(kFields_a5b45e2b) / sizeof(FieldDef)), 1, 0},
     {0xa676a322u, "inputMessageID", kFields_a676a322, (uint16_t)(sizeof(kFields_a676a322) / sizeof(FieldDef)), 0, 0},
+    {0xa677244fu, "auth.sendCode", kFields_a677244f, (uint16_t)(sizeof(kFields_a677244f) / sizeof(FieldDef)), 0, 0},
     {0xa80f51e4u, "messageActionGiveawayLaunch", kFields_a80f51e4, (uint16_t)(sizeof(kFields_a80f51e4) / sizeof(FieldDef)), 1, 0},
     {0xa8718dc5u, "pageBlockEmbed", kFields_a8718dc5, (uint16_t)(sizeof(kFields_a8718dc5) / sizeof(FieldDef)), 1, 0},
     {0xa8763ab5u, "inputMediaDocument", kFields_a8763ab5, (uint16_t)(sizeof(kFields_a8763ab5) / sizeof(FieldDef)), 1, 0},
@@ -3913,10 +4053,12 @@ const CtorDef kCtors[] = {
     {0xaa2769edu, "bots.sendCustomRequest", kFields_aa2769ed, (uint16_t)(sizeof(kFields_aa2769ed) / sizeof(FieldDef)), 0, 0},
     {0xaac7b717u, "auth.signUp", kFields_aac7b717, (uint16_t)(sizeof(kFields_aac7b717) / sizeof(FieldDef)), 1, 0},
     {0xaacfff84u, "buttonTypeRequestPoll", kFields_aacfff84, (uint16_t)(sizeof(kFields_aacfff84) / sizeof(FieldDef)), 1, 0},
+    {0xab03c6d9u, "auth.sentCodeTypeFlashCall", kFields_ab03c6d9, (uint16_t)(sizeof(kFields_ab03c6d9) / sizeof(FieldDef)), 0, 0},
     {0xabbbd346u, "messages.summarizeText", kFields_abbbd346, (uint16_t)(sizeof(kFields_abbbd346) / sizeof(FieldDef)), 1, 0},
     {0xac1f1fcdu, "messageActionPaidMessagesRefunded", kFields_ac1f1fcd, (uint16_t)(sizeof(kFields_ac1f1fcd) / sizeof(FieldDef)), 0, 0},
     {0xac6a83aau, "textAutoUrl", kFields_ac6a83aa, (uint16_t)(sizeof(kFields_ac6a83aa) / sizeof(FieldDef)), 0, 0},
     {0xacfa1a7eu, "inputMessageCallbackQuery", kFields_acfa1a7e, (uint16_t)(sizeof(kFields_acfa1a7e) / sizeof(FieldDef)), 0, 0},
+    {0xad253d78u, "codeSettings", kFields_ad253d78, (uint16_t)(sizeof(kFields_ad253d78) / sizeof(FieldDef)), 1, 0},
     {0xad628cc8u, "messageExtendedMediaPreview", kFields_ad628cc8, (uint16_t)(sizeof(kFields_ad628cc8) / sizeof(FieldDef)), 1, 0},
     {0xad8c9a23u, "channels.getMessages", kFields_ad8c9a23, (uint16_t)(sizeof(kFields_ad8c9a23) / sizeof(FieldDef)), 0, 0},
     {0xaed6dbb2u, "maskCoords", kFields_aed6dbb2, (uint16_t)(sizeof(kFields_aed6dbb2) / sizeof(FieldDef)), 0, 0},
@@ -3932,6 +4074,7 @@ const CtorDef kCtors[] = {
     {0xb2a2f663u, "geoPoint", kFields_b2a2f663, (uint16_t)(sizeof(kFields_b2a2f663) / sizeof(FieldDef)), 1, 0},
     {0xb2b15770u, "replyInlineMarkup", kFields_b2b15770, (uint16_t)(sizeof(kFields_b2b15770) / sizeof(FieldDef)), 1, 0},
     {0xb320aadbu, "secureValueTypePhone", kFields_b320aadb, (uint16_t)(sizeof(kFields_b320aadb) / sizeof(FieldDef)), 0, 0},
+    {0xb37794afu, "auth.sentCodeTypeSmsPhrase", kFields_b37794af, (uint16_t)(sizeof(kFields_b37794af) / sizeof(FieldDef)), 1, 0},
     {0xb390dc08u, "pageRelatedArticle", kFields_b390dc08, (uint16_t)(sizeof(kFields_b390dc08) / sizeof(FieldDef)), 1, 0},
     {0xb3a07661u, "messageActionGroupCallScheduled", kFields_b3a07661, (uint16_t)(sizeof(kFields_b3a07661) / sizeof(FieldDef)), 0, 0},
     {0xb4073647u, "username", kFields_b4073647, (uint16_t)(sizeof(kFields_b4073647) / sizeof(FieldDef)), 1, 0},
@@ -3975,6 +4118,7 @@ const CtorDef kCtors[] = {
     {0xbf7d6572u, "messageActionNoForwardsToggle", kFields_bf7d6572, (uint16_t)(sizeof(kFields_bf7d6572) / sizeof(FieldDef)), 0, 0},
     {0xbfd02da2u, "inlineButtonTypeUrlAuth", kFields_bfd02da2, (uint16_t)(sizeof(kFields_bfd02da2) / sizeof(FieldDef)), 1, 0},
     {0xbfd064ecu, "pageBlockHeader", kFields_bfd064ec, (uint16_t)(sizeof(kFields_bfd064ec) / sizeof(FieldDef)), 0, 0},
+    {0xc000bba2u, "auth.sentCodeTypeSms", kFields_c000bba2, (uint16_t)(sizeof(kFields_c000bba2) / sizeof(FieldDef)), 0, 0},
     {0xc01a597au, "buttonTypeSimpleWebView", kFields_c01a597a, (uint16_t)(sizeof(kFields_c01a597a) / sizeof(FieldDef)), 0, 0},
     {0xc070d93eu, "pageBlockPreformatted", kFields_c070d93e, (uint16_t)(sizeof(kFields_c070d93e) / sizeof(FieldDef)), 0, 0},
     {0xc0944820u, "messageActionTopicEdit", kFields_c0944820, (uint16_t)(sizeof(kFields_c0944820) / sizeof(FieldDef)), 1, 0},
@@ -4003,6 +4147,7 @@ const CtorDef kCtors[] = {
     {0xc9f06e1bu, "requestPeerTypeChat", kFields_c9f06e1b, (uint16_t)(sizeof(kFields_c9f06e1b) / sizeof(FieldDef)), 1, 0},
     {0xca5cab89u, "messageMediaVideoStream", kFields_ca5cab89, (uint16_t)(sizeof(kFields_ca5cab89) / sizeof(FieldDef)), 1, 0},
     {0xcad5452du, "mediaAreaGeoPoint", kFields_cad5452d, (uint16_t)(sizeof(kFields_cad5452d) / sizeof(FieldDef)), 1, 0},
+    {0xcae47523u, "auth.resendCode", kFields_cae47523, (uint16_t)(sizeof(kFields_cae47523) / sizeof(FieldDef)), 1, 0},
     {0xcb296bf8u, "labeledPrice", kFields_cb296bf8, (uint16_t)(sizeof(kFields_cb296bf8) / sizeof(FieldDef)), 0, 0},
     {0xcba9a52fu, "todoItem", kFields_cba9a52f, (uint16_t)(sizeof(kFields_cba9a52f) / sizeof(FieldDef)), 0, 0},
     {0xcbe31e26u, "secureValueTypeAddress", kFields_cbe31e26, (uint16_t)(sizeof(kFields_cbe31e26) / sizeof(FieldDef)), 0, 0},
@@ -4021,11 +4166,13 @@ const CtorDef kCtors[] = {
     {0xd33f43f3u, "inputMediaGame", kFields_d33f43f3, (uint16_t)(sizeof(kFields_d33f43f3) / sizeof(FieldDef)), 0, 0},
     {0xd3bc4b7au, "userEmpty", kFields_d3bc4b7a, (uint16_t)(sizeof(kFields_d3bc4b7a) / sizeof(FieldDef)), 0, 0},
     {0xd45ab096u, "passwordKdfAlgoUnknown", kFields_d45ab096, (uint16_t)(sizeof(kFields_d45ab096) / sizeof(FieldDef)), 0, 0},
+    {0xd61ad6eeu, "auth.codeTypeMissedCall", kFields_d61ad6ee, (uint16_t)(sizeof(kFields_d61ad6ee) / sizeof(FieldDef)), 0, 0},
     {0xd62ff46au, "requestedPeerUser", kFields_d62ff46a, (uint16_t)(sizeof(kFields_d62ff46a) / sizeof(FieldDef)), 1, 0},
     {0xd766c50au, "inlineQueryPeerTypeChat", kFields_d766c50a, (uint16_t)(sizeof(kFields_d766c50a) / sizeof(FieldDef)), 0, 0},
     {0xd8214d41u, "photoPathSize", kFields_d8214d41, (uint16_t)(sizeof(kFields_d8214d41) / sizeof(FieldDef)), 0, 0},
     {0xd8aa840fu, "inputGroupCall", kFields_d8aa840f, (uint16_t)(sizeof(kFields_d8aa840f) / sizeof(FieldDef)), 0, 0},
     {0xd912a59cu, "textItalic", kFields_d912a59c, (uint16_t)(sizeof(kFields_d912a59c) / sizeof(FieldDef)), 0, 0},
+    {0xd9565c39u, "auth.sentCodeTypeFragmentSms", kFields_d9565c39, (uint16_t)(sizeof(kFields_d9565c39) / sizeof(FieldDef)), 0, 0},
     {0xd95c6154u, "messageActionSecureValuesSent", kFields_d95c6154, (uint16_t)(sizeof(kFields_d95c6154) / sizeof(FieldDef)), 0, 0},
     {0xda2ad647u, "messages.emojiGameOutcome", kFields_da2ad647, (uint16_t)(sizeof(kFields_da2ad647) / sizeof(FieldDef)), 0, 0},
     {0xdb20b188u, "pageBlockDivider", kFields_db20b188, (uint16_t)(sizeof(kFields_db20b188) / sizeof(FieldDef)), 0, 0},
@@ -4090,6 +4237,7 @@ const CtorDef kCtors[] = {
     {0xf35aec28u, "inputChannel", kFields_f35aec28, (uint16_t)(sizeof(kFields_f35aec28) / sizeof(FieldDef)), 0, 0},
     {0xf3a9244au, "inputMediaStakeDice", kFields_f3a9244a, (uint16_t)(sizeof(kFields_f3a9244a) / sizeof(FieldDef)), 0, 0},
     {0xf3f25f76u, "messageActionContactSignUp", kFields_f3f25f76, (uint16_t)(sizeof(kFields_f3f25f76) / sizeof(FieldDef)), 0, 0},
+    {0xf450f59bu, "auth.sentCodeTypeEmailCode", kFields_f450f59b, (uint16_t)(sizeof(kFields_f450f59b) / sizeof(FieldDef)), 1, 0},
     {0xf516760bu, "messages.getScheduledHistory", kFields_f516760b, (uint16_t)(sizeof(kFields_f516760b) / sizeof(FieldDef)), 0, 0},
     {0xf52ff27fu, "inputFile", kFields_f52ff27f, (uint16_t)(sizeof(kFields_f52ff27f) / sizeof(FieldDef)), 0, 0},
     {0xf6a548d3u, "messageMediaInvoice", kFields_f6a548d3, (uint16_t)(sizeof(kFields_f6a548d3) / sizeof(FieldDef)), 1, 0},
@@ -4098,6 +4246,7 @@ const CtorDef kCtors[] = {
     {0xf7c1b13fu, "inputUserSelf", kFields_f7c1b13f, (uint16_t)(sizeof(kFields_f7c1b13f) / sizeof(FieldDef)), 0, 0},
     {0xf7e8d89bu, "privacyValueAllowCloseFriends", kFields_f7e8d89b, (uint16_t)(sizeof(kFields_f7e8d89b) / sizeof(FieldDef)), 0, 0},
     {0xf85c413cu, "videoSizeEmojiMarkup", kFields_f85c413c, (uint16_t)(sizeof(kFields_f85c413c) / sizeof(FieldDef)), 0, 0},
+    {0xf8827ebfu, "auth.sentCodePaymentRequired", kFields_f8827ebf, (uint16_t)(sizeof(kFields_f8827ebf) / sizeof(FieldDef)), 0, 0},
     {0xf888fa1au, "privacyValueDisallowContacts", kFields_f888fa1a, (uint16_t)(sizeof(kFields_f888fa1a) / sizeof(FieldDef)), 0, 0},
     {0xf8ab7dfbu, "inputMediaContact", kFields_f8ab7dfb, (uint16_t)(sizeof(kFields_f8ab7dfb) / sizeof(FieldDef)), 0, 0},
     {0xf9c44144u, "inputMediaGeoPoint", kFields_f9c44144, (uint16_t)(sizeof(kFields_f9c44144) / sizeof(FieldDef)), 0, 0},

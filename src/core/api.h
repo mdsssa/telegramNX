@@ -39,13 +39,28 @@ LoginToken importLoginToken(mt::RpcClient& rpc, const Bytes& token);
 
 std::string qrLoginUrl(const Bytes& token);
 
+struct LoginCodeRequest {
+    bool ok = false;
+    std::string codeHash;
+    LoginToken authorized;
+    std::string error;
+};
+
+LoginCodeRequest requestLoginCode(mt::RpcClient& rpc, int apiId, const std::string& apiHash,
+                                  const std::string& phone);
+LoginToken signInWithCode(mt::RpcClient& rpc, const std::string& phone,
+                          const std::string& codeHash, const std::string& code);
+LoginToken signUpWithCode(mt::RpcClient& rpc, const std::string& phone,
+                          const std::string& codeHash, const std::string& firstName,
+                          const std::string& lastName);
+
 bool fetchPasswordParams(mt::RpcClient& rpc, SrpParams* out, std::string* error);
 LoginToken checkPassword(mt::RpcClient& rpc, const SrpParams& params, const std::string& password);
 
 bool parseAuthAuthorization(const Bytes& data, LoginToken* out, size_t* consumed);
 
 struct PeerRef {
-    enum class Kind { User, Chat, Channel };
+    enum class Kind { User, Chat, Channel, Self };
     Kind kind = Kind::User;
     int64_t id = 0;
     uint64_t accessHash = 0;

@@ -69,7 +69,7 @@ def cstr(s):
 
 def main():
     ctors, bytype = parse()
-    roots = ['User','Chat','Channel','Dialog','Message','Peer','auth.Authorization','auth.LoginToken','Config','messages.Dialogs','messages.Messages','updates.State','account.Password']
+    roots = ['User','Chat','Channel','Dialog','Message','Peer','auth.Authorization','auth.LoginToken','Config','messages.Dialogs','messages.Messages','updates.State','account.Password','auth.SentCode']
     keep = closure(ctors, bytype, roots)
     keep_sorted = sorted(keep)
     print('constructors:', len(keep_sorted), file=sys.stderr)

@@ -24,5 +24,6 @@ Bytes rsaRawPublic(const Bytes& input, const RsaKey& key);
 
 // Current production server keys used by official clients.
 const char* productionRsaKeyPem();
+const char* testRsaKeyPem();
 
 }  // namespace tgnx

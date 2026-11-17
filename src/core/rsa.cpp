@@ -151,6 +151,17 @@ Bytes rsaPadAndEncrypt(const Bytes& data, const RsaKey& key) {
     throw ProtocolError("RSA_PAD: failed to build a value below the modulus");
 }
 
+const char* testRsaKeyPem() {
+    return "-----BEGIN RSA PUBLIC KEY-----\n"
+           "MIIBCgKCAQEAyMEdY1aR+sCR3ZSJrtztKTKqigvO/vBfqACJLZtS7QMgCGXJ6XIR\n"
+           "yy7mx66W0/sOFa7/1mAZtEoIokDP3ShoqF4fVNb6XeqgQfaUHd8wJpDWHcR2OFwv\n"
+           "plUUI1PLTktZ9uW2WE23b+ixNwJjJGwBDJPQEQFBE+vfmH0JP503wr5INS1poWg/\n"
+           "j25sIWeYPHYeOrFp/eXaqhISP6G+q2IeTaWTXpwZj4LzXq5YOpk4bYEQ6mvRq7D1\n"
+           "aHWfYmlEGepfaYR8Q0YqvvhYtMte3ITnuSJs171+GDqpdKcSwHnd6FudwGO4pcCO\n"
+           "j4WcDuXc2CTHgH8gFTNhp/Y8/SpDOhvn9QIDAQAB\n"
+           "-----END RSA PUBLIC KEY-----";
+}
+
 const char* productionRsaKeyPem() {
     return "-----BEGIN RSA PUBLIC KEY-----\n"
            "MIIBCgKCAQEA6LszBcC1LGzyr992NzE0ieY+BSaOW622Aa9Bd4ZHLl+TuFQ4lo4g\n"

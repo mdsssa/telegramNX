@@ -168,10 +168,16 @@ bool generateAuthKey(Transport& transport, int dcId, AuthKey* out, std::string* 
     if (!factorize(pq, &p, &q)) return fail("handshake: failed to factor pq");
     if (p * q != pq) return fail("handshake: factor mismatch");
 
-    RsaKey rsa = RsaKey::fromPem(productionRsaKeyPem());
+    RsaKey rsa;
     bool fingerprintOk = false;
-    for (uint64_t f : fingerprints) {
-        if (uint64_t(rsa.fingerprint) == f) fingerprintOk = true;
+    for (const char* pem : {productionRsaKeyPem(), testRsaKeyPem()}) {
+        RsaKey candidate = RsaKey::fromPem(pem);
+        for (uint64_t f : fingerprints) {
+            if (uint64_t(candidate.fingerprint) == f) {
+                rsa = candidate;
+                fingerprintOk = true;
+            }
+        }
     }
     if (!fingerprintOk) {
         std::string list;

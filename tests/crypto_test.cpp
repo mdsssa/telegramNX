@@ -182,6 +182,9 @@ static void testRsa() {
                 (unsigned long long)uint64_t(key.fingerprint));
     CHECK(key.fingerprint == -3414540481677951611LL);
 
+    RsaKey testKey = RsaKey::fromPem(testRsaKeyPem());
+    CHECK(uint64_t(testKey.fingerprint) == 0xb25898df208d2603ULL);
+
     // The padding must be a valid 256-byte value below the modulus, and the
     // raw public operation must be deterministic.
     Bytes payload = fromHex("0123456789abcdef");

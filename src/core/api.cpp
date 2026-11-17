@@ -158,6 +158,85 @@ namespace {
 Bytes bytesOf(const std::string& s) { return Bytes(s.begin(), s.end()); }
 }  // namespace
 
+LoginCodeRequest requestLoginCode(mt::RpcClient& rpc, int apiId, const std::string& apiHash,
+                                  const std::string& phone) {
+    LoginCodeRequest out;
+    TlWriter settings;
+    settings.u32(0xad253d78);  // codeSettings
+    settings.u32(0);           // flags
+    TlWriter w;
+    w.u32(0xa677244f);  // auth.sendCode
+    w.str(phone);
+    w.i32(apiId);
+    w.str(apiHash);
+    w.raw(settings.data().data(), settings.size());
+    auto res = rpc.invoke(w.take(), 20000);
+    if (!res.ok) {
+        out.error = std::to_string(res.error.code) + " " + res.error.message;
+        return out;
+    }
+    try {
+        tl::TlNode root = tl::parseObject(res.body);
+        if (root.ctor == 0x2390fe44) {  // auth.sentCodeSuccess
+            out.ok = true;
+            out.error = "already authorized";
+            return out;
+        }
+        out.codeHash = tl::getString(root, "phone_code_hash");
+        out.ok = !out.codeHash.empty();
+        if (!out.ok) out.error = "нет phone_code_hash";
+    } catch (const ProtocolError& e) {
+        out.error = e.what();
+    }
+    return out;
+}
+
+LoginToken signInWithCode(mt::RpcClient& rpc, const std::string& phone,
+                          const std::string& codeHash, const std::string& code) {
+    TlWriter w;
+    w.u32(0x8d52a951);  // auth.signIn
+    w.u32(1u << 0);     // phone_code present
+    w.str(phone);
+    w.str(codeHash);
+    w.str(code);
+    auto res = rpc.invoke(w.take(), 30000);
+    LoginToken token;
+    if (!res.ok) {
+        token.errorCode = res.error.code;
+        token.errorText = res.error.message;
+        return token;
+    }
+    if (!parseAuthAuthorization(res.body, &token, nullptr)) {
+        token.errorCode = 400;
+        token.errorText = "не удалось разобрать authorization";
+    }
+    return token;
+}
+
+LoginToken signUpWithCode(mt::RpcClient& rpc, const std::string& phone,
+                          const std::string& codeHash, const std::string& firstName,
+                          const std::string& lastName) {
+    TlWriter w;
+    w.u32(0xaac7b717);  // auth.signUp
+    w.u32(0);           // flags
+    w.str(phone);
+    w.str(codeHash);
+    w.str(firstName);
+    w.str(lastName);
+    auto res = rpc.invoke(w.take(), 30000);
+    LoginToken token;
+    if (!res.ok) {
+        token.errorCode = res.error.code;
+        token.errorText = res.error.message;
+        return token;
+    }
+    if (!parseAuthAuthorization(res.body, &token, nullptr)) {
+        token.errorCode = 400;
+        token.errorText = "не удалось разобрать authorization";
+    }
+    return token;
+}
+
 bool fetchPasswordParams(mt::RpcClient& rpc, SrpParams* out, std::string* error) {
     TlWriter w;
     w.u32(0x548a30f5);  // account.getPassword
